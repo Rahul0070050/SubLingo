@@ -39,6 +39,7 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
   { code: "bn", name: "Bengali", nativeName: "বাংলা", flag: "🇧🇩" },
   { code: "ta", name: "Tamil", nativeName: "தமிழ்", flag: "🇮🇳" },
   { code: "te", name: "Telugu", nativeName: "తెలుగు", flag: "🇮🇳" },
+  { code: "ml", name: "Malayalam", nativeName: "മലയാളം", flag: "🇮🇳" },
   { code: "ms", name: "Malay", nativeName: "Bahasa Melayu", flag: "🇲🇾" },
   { code: "fa", name: "Persian", nativeName: "فارسی", flag: "🇮🇷" },
 ];

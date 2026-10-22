@@ -250,6 +250,62 @@ Output JSON only with schema: [ { "id": number, "text": string } ]`;
 }
 
 /**
+ * DeepL translation engine
+ */
+export async function translateWithDeepL(
+  cues: SubtitleCue[],
+  settings: TranslationSettings
+): Promise<BatchTranslationResult> {
+  const apiKey = settings.apiKey || process.env.DEEPL_API_KEY;
+  if (!apiKey) {
+    throw new Error("DeepL API key is required. Please provide it in settings or set DEEPL_API_KEY in .env.local.");
+  }
+
+  const endpoint = apiKey.endsWith(":fx")
+    ? "https://api-free.deepl.com/v2/translate"
+    : "https://api.deepl.com/v2/translate";
+
+  const targetLang = settings.targetLang.toUpperCase();
+  const sourceLang = settings.sourceLang !== "auto" ? settings.sourceLang.toUpperCase() : undefined;
+
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Authorization": `DeepL-Auth-Key ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      text: cues.map((c) => c.originalText),
+      target_lang: targetLang,
+      ...(sourceLang ? { source_lang: sourceLang } : {}),
+      preserve_formatting: true,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`DeepL API error (${res.status}): ${err}`);
+  }
+
+  const data = await res.json();
+  const translations: Array<{ text: string }> = data.translations || [];
+
+  const updatedCues = cues.map((cue, index) => {
+    const translated = translations[index]?.text || cue.originalText;
+    const duration = Math.max(0.1, cue.endSeconds - cue.startSeconds);
+    return {
+      ...cue,
+      translatedText: translated,
+      status: "completed" as const,
+      charCount: translated.length,
+      readingSpeedCps: calculateCPS(translated, duration),
+    };
+  });
+
+  return { cues: updatedCues };
+}
+
+/**
  * Universal dispatcher
  */
 export async function executeBatchTranslation(
@@ -260,7 +316,10 @@ export async function executeBatchTranslation(
     return translateWithGemini(cues, settings);
   } else if (settings.provider === "openai") {
     return translateWithOpenAI(cues, settings);
+  } else if (settings.provider === "deepl") {
+    return translateWithDeepL(cues, settings);
   } else {
     return translateWithFreeEngine(cues, settings.sourceLang, settings.targetLang);
   }
 }
+
