@@ -49,6 +49,7 @@ export function SynchronizedPreview({
   const [isDraggingVideo, setIsDraggingVideo] = React.useState(false);
   const [subtitleSize, setSubtitleSize] = React.useState<"sm" | "md" | "lg">("md");
   const [subtitlePosition, setSubtitlePosition] = React.useState<"bottom" | "top">("bottom");
+  const [subtitleDelayMs, setSubtitleDelayMs] = React.useState<number>(0);
 
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
@@ -76,6 +77,25 @@ export function SynchronizedPreview({
       }
     }
   }, [seekTimeSeconds]);
+
+  // Keyboard shortcuts for subtitle delay sync: [ for -100ms and ] for +100ms
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
+      if (tag === "input" || tag === "textarea") return;
+
+      if (e.key === "[") {
+        e.preventDefault();
+        setSubtitleDelayMs((d) => d - 100);
+      } else if (e.key === "]") {
+        e.preventDefault();
+        setSubtitleDelayMs((d) => d + 100);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Simulated playback timer (when no local video is loaded)
   React.useEffect(() => {
@@ -111,10 +131,11 @@ export function SynchronizedPreview({
     };
   }, [isPlaying, playbackRate, duration, mediaType]);
 
-  // Find active cue at current time
+  // Find active cue at current time with preview delay offset applied (does not modify file timings)
   const activeCue = React.useMemo(() => {
-    return cues.find((c) => currentTime >= c.startSeconds && currentTime <= c.endSeconds);
-  }, [cues, currentTime]);
+    const effectiveTime = currentTime - subtitleDelayMs / 1000;
+    return cues.find((c) => effectiveTime >= c.startSeconds && effectiveTime <= c.endSeconds);
+  }, [cues, currentTime, subtitleDelayMs]);
 
   // Sync active cue with parent editor if changed
   React.useEffect(() => {
@@ -549,11 +570,52 @@ export function SynchronizedPreview({
             )}
           </div>
 
-          {/* Right Group: Cue indicator, Speed, Subtitle Size, Fullscreen */}
-          <div className="flex items-center gap-2">
+          {/* Right Group: Cue indicator, Subtitle Delay, Speed, Subtitle Size, Fullscreen */}
+          <div className="flex flex-wrap items-center gap-2">
             <span className="text-[11px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded-md hidden sm:inline">
-              {activeCue ? `Cue #${activeCue.id}` : "No Active Cue"}
+              {activeCue ? `Cue #${activeCue.id}` : "No Cue"}
             </span>
+
+            {/* Subtitle Delay Settings (Preview Sync Only - does NOT change file timings) */}
+            <div
+              className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-[11px]"
+              title="Subtitle preview delay adjustment. Modifies only the playback display sync without altering the subtitle file timestamps."
+            >
+              <span className="text-slate-400 font-medium">Delay:</span>
+              <button
+                type="button"
+                onClick={() => setSubtitleDelayMs((d) => d - 100)}
+                className="h-5 w-5 rounded bg-white/5 hover:bg-white/20 text-slate-300 font-bold flex items-center justify-center transition-colors active:scale-90"
+                title="Display subtitle 100ms earlier (-100ms)"
+              >
+                -
+              </button>
+              <span
+                className={`font-mono px-1 font-semibold min-w-[50px] text-center ${
+                  subtitleDelayMs !== 0 ? "text-amber-400" : "text-slate-300"
+                }`}
+              >
+                {subtitleDelayMs > 0 ? `+${subtitleDelayMs}` : subtitleDelayMs}ms
+              </span>
+              <button
+                type="button"
+                onClick={() => setSubtitleDelayMs((d) => d + 100)}
+                className="h-5 w-5 rounded bg-white/5 hover:bg-white/20 text-slate-300 font-bold flex items-center justify-center transition-colors active:scale-90"
+                title="Display subtitle 100ms later (+100ms)"
+              >
+                +
+              </button>
+              {subtitleDelayMs !== 0 && (
+                <button
+                  type="button"
+                  onClick={() => setSubtitleDelayMs(0)}
+                  className="text-[10px] text-indigo-400 hover:text-indigo-300 px-1 font-medium transition-colors ml-0.5 hover:underline"
+                  title="Reset preview delay to 0ms"
+                >
+                  Reset
+                </button>
+              )}
+            </div>
 
             {/* Subtitle Size Selector */}
             <select
