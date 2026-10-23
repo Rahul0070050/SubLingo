@@ -245,8 +245,8 @@ export default function TranslateWorkspace() {
           settings.provider === "gemini"
             ? "Gemini AI"
             : settings.provider === "openai"
-            ? "OpenAI"
-            : "Free Engine"
+              ? "OpenAI"
+              : "Free Engine"
         }
       />
 
@@ -281,7 +281,8 @@ export default function TranslateWorkspace() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-base font-bold text-white truncate max-w-xs sm:max-w-md">
-                      {subtitleFile.filename}
+                      {subtitleFile.filename.slice(0, 20)}
+                      {/* cut the string to length */}
                     </h2>
                     <Badge variant="outline" className="text-[10px] uppercase font-mono py-0 px-2">
                       .{subtitleFile.format}
@@ -370,9 +371,8 @@ export default function TranslateWorkspace() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowVideoPreview(!showVideoPreview)}
-                  className={`gap-1.5 border-white/10 text-xs ${
-                    showVideoPreview ? "bg-indigo-600/20 text-indigo-300 border-indigo-500/40" : "text-slate-300"
-                  }`}
+                  className={`gap-1.5 border-white/10 text-xs ${showVideoPreview ? "bg-indigo-600/20 text-indigo-300 border-indigo-500/40" : "text-slate-300"
+                    }`}
                   title="Toggle Synchronized Video Preview"
                 >
                   <Film className="h-3.5 w-3.5" />
