@@ -277,7 +277,7 @@ export function SynchronizedPreview({
   return (
     <div
       ref={containerRef}
-      className="rounded-3xl border border-white/10 bg-slate-950/95 overflow-hidden shadow-2xl backdrop-blur-xl flex flex-col"
+      className="rounded-xl border border-white/[0.08] bg-[#12151b] overflow-hidden shadow-sm flex flex-col"
     >
       {/* Hidden File Input for Video Upload */}
       <input
@@ -289,15 +289,15 @@ export function SynchronizedPreview({
       />
 
       {/* Header Bar */}
-      <div className="flex flex-wrap items-center justify-between px-4 py-3 border-b border-white/10 bg-slate-900/70 gap-2">
+      <div className="flex flex-wrap items-center justify-between px-3.5 py-2.5 border-b border-white/[0.06] bg-[#0e1116] gap-2">
         <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400">
-            <Film className="h-4 w-4" />
+          <div className="flex h-6 w-6 items-center justify-center rounded bg-blue-600/10 text-blue-400">
+            <Film className="h-3.5 w-3.5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white tracking-wide uppercase">
-                Synchronized Video Preview
+              <span className="text-xs font-semibold text-white tracking-wide">
+                Video Preview
               </span>
               <Badge
                 variant={mediaType === "video" ? "success" : "outline"}
@@ -317,34 +317,37 @@ export function SynchronizedPreview({
         {/* Top Controls: Mode & Actions */}
         <div className="flex items-center gap-2">
           {/* Subtitle Track Selector */}
-          <div className="flex rounded-lg bg-black/50 p-0.5 border border-white/10 text-[10px]">
+          <div className="flex rounded-md bg-[#161a22] p-0.5 border border-white/[0.08] text-[10px]">
             <button
               type="button"
               onClick={() => setPreviewMode("translated")}
-              className={`px-2 py-1 rounded-md font-semibold transition-all ${previewMode === "translated"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
-                }`}
+              className={`px-2 py-0.5 rounded font-medium transition-colors ${
+                previewMode === "translated"
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-400 hover:text-white"
+              }`}
             >
               Translated
             </button>
             <button
               type="button"
               onClick={() => setPreviewMode("bilingual")}
-              className={`px-2 py-1 rounded-md font-semibold transition-all ${previewMode === "bilingual"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
-                }`}
+              className={`px-2 py-0.5 rounded font-medium transition-colors ${
+                previewMode === "bilingual"
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-400 hover:text-white"
+              }`}
             >
               Bilingual
             </button>
             <button
               type="button"
               onClick={() => setPreviewMode("original")}
-              className={`px-2 py-1 rounded-md font-semibold transition-all ${previewMode === "original"
-                ? "bg-indigo-600 text-white shadow-sm"
-                : "text-slate-400 hover:text-white"
-                }`}
+              className={`px-2 py-0.5 rounded font-medium transition-colors ${
+                previewMode === "original"
+                  ? "bg-blue-600 text-white"
+                  : "text-slate-400 hover:text-white"
+              }`}
             >
               Original
             </button>
@@ -355,7 +358,7 @@ export function SynchronizedPreview({
             <button
               type="button"
               onClick={clearLoadedVideo}
-              className="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-300 hover:bg-red-500/10 px-2 py-1 rounded-lg border border-red-500/20 transition-colors"
+              className="flex items-center gap-1 text-[11px] text-red-400 hover:text-red-300 hover:bg-red-500/10 px-2 py-1 rounded border border-red-500/20 transition-colors"
               title="Eject video and reset"
             >
               <X className="h-3 w-3" />
@@ -365,10 +368,10 @@ export function SynchronizedPreview({
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 px-3 py-1.5 rounded-xl shadow-md shadow-indigo-600/20 transition-all active:scale-95"
+              className="flex items-center gap-1.5 text-xs font-medium text-white bg-blue-600 hover:bg-blue-500 px-2.5 py-1 rounded transition-colors"
             >
               <UploadCloud className="h-3.5 w-3.5" />
-              <span>Upload Video</span>
+              <span>Load Video</span>
             </button>
           )}
         </div>
@@ -382,8 +385,9 @@ export function SynchronizedPreview({
         }}
         onDragLeave={() => setIsDraggingVideo(false)}
         onDrop={handleDropVideo}
-        className={`relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden group select-none transition-colors ${isDraggingVideo ? "ring-2 ring-indigo-500 bg-indigo-950/40" : ""
-          }`}
+        className={`relative aspect-video w-full bg-[#0a0c10] flex items-center justify-center overflow-hidden group select-none transition-colors ${
+          isDraggingVideo ? "ring-2 ring-blue-500 bg-blue-950/20" : ""
+        }`}
       >
         {/* Active Local Video Player */}
         {mediaType === "video" && mediaSrc ? (
@@ -401,17 +405,17 @@ export function SynchronizedPreview({
           /* Empty / Upload Dropzone State */
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center cursor-pointer bg-gradient-to-b from-slate-950 via-slate-900/90 to-slate-950 hover:bg-slate-900/60 transition-all"
+            className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center cursor-pointer bg-[#0c0e13] hover:bg-[#101319] transition-colors"
           >
-            <div className="w-16 h-16 rounded-2xl bg-indigo-600/15 border border-indigo-500/30 flex items-center justify-center mb-3 text-indigo-400 group-hover:scale-105 group-hover:bg-indigo-600/25 transition-all shadow-xl shadow-indigo-500/10">
-              <UploadCloud className="h-8 w-8 animate-pulse" />
+            <div className="w-11 h-11 rounded-lg bg-blue-600/10 border border-blue-500/20 flex items-center justify-center mb-2.5 text-blue-400">
+              <UploadCloud className="h-5 w-5" />
             </div>
 
-            <h4 className="text-sm sm:text-base font-bold text-white mb-1">
-              Drop local video here, or <span className="text-indigo-400 underline underline-offset-4">browse</span>
+            <h4 className="text-xs sm:text-sm font-semibold text-white mb-1">
+              Drop local video here, or <span className="text-blue-400 underline underline-offset-4">browse</span>
             </h4>
-            <p className="text-xs text-slate-400 max-w-sm mb-3 leading-relaxed">
-              Plays 100% locally in your browser with synchronized subtitles. Nothing is uploaded to any server.
+            <p className="text-[11px] text-slate-400 max-w-sm mb-2.5 leading-relaxed">
+              Plays locally in your browser with synchronized subtitles. Nothing is uploaded to any server.
             </p>
             <div className="flex items-center gap-2 text-[10px] text-slate-500 font-mono">
               <span>MP4</span>
@@ -427,9 +431,9 @@ export function SynchronizedPreview({
 
         {/* Drag Overlay Notice */}
         {isDraggingVideo && (
-          <div className="absolute inset-0 z-30 bg-indigo-950/80 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4">
-            <UploadCloud className="h-12 w-12 text-indigo-300 animate-bounce mb-2" />
-            <p className="text-base font-bold text-white">Drop video to load instantly!</p>
+          <div className="absolute inset-0 z-30 bg-blue-950/90 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4">
+            <UploadCloud className="h-10 w-10 text-blue-300 mb-2 animate-bounce" />
+            <p className="text-sm font-semibold text-white">Drop video to load instantly</p>
           </div>
         )}
 
@@ -559,7 +563,7 @@ export function SynchronizedPreview({
                   step="0.05"
                   value={isMuted ? 0 : volume}
                   onChange={handleVolumeChange}
-                  className="w-14 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-400"
+                  className="w-14 h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500"
                 />
               </div>
             )}
@@ -567,34 +571,35 @@ export function SynchronizedPreview({
 
           {/* Right Group: Cue indicator, Subtitle Delay, Speed, Subtitle Size, Fullscreen */}
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded-md hidden sm:inline">
+            <span className="text-[11px] font-mono text-slate-400 bg-white/[0.04] px-2 py-0.5 rounded hidden sm:inline border border-white/[0.06]">
               {activeCue ? `Cue #${activeCue.id}` : "No Cue"}
             </span>
 
             {/* Subtitle Delay Settings (Preview Sync Only - does NOT change file timings) */}
             <div
-              className="flex items-center gap-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-[11px]"
+              className="flex items-center gap-1 bg-[#161a22] border border-white/[0.08] rounded-md px-2 py-0.5 text-[11px]"
               title="Subtitle preview delay adjustment. Modifies only the playback display sync without altering the subtitle file timestamps."
             >
               <span className="text-slate-400 font-medium">Delay:</span>
               <button
                 type="button"
                 onClick={() => setSubtitleDelayMs((d) => d - 100)}
-                className="h-5 w-5 rounded bg-white/5 hover:bg-white/20 text-slate-300 font-bold flex items-center justify-center transition-colors active:scale-90"
+                className="h-4 w-4 rounded bg-white/[0.05] hover:bg-white/[0.15] text-slate-300 font-bold flex items-center justify-center transition-colors active:scale-90"
                 title="Display subtitle 100ms earlier (-100ms)"
               >
                 -
               </button>
               <span
-                className={`font-mono px-1 font-semibold min-w-[50px] text-center ${subtitleDelayMs !== 0 ? "text-amber-400" : "text-slate-300"
-                  }`}
+                className={`font-mono px-1 font-semibold min-w-[50px] text-center ${
+                  subtitleDelayMs !== 0 ? "text-amber-400" : "text-slate-300"
+                }`}
               >
                 {subtitleDelayMs > 0 ? `+${subtitleDelayMs}` : subtitleDelayMs}ms
               </span>
               <button
                 type="button"
                 onClick={() => setSubtitleDelayMs((d) => d + 100)}
-                className="h-5 w-5 rounded bg-white/5 hover:bg-white/20 text-slate-300 font-bold flex items-center justify-center transition-colors active:scale-90"
+                className="h-4 w-4 rounded bg-white/[0.05] hover:bg-white/[0.15] text-slate-300 font-bold flex items-center justify-center transition-colors active:scale-90"
                 title="Display subtitle 100ms later (+100ms)"
               >
                 +
@@ -603,7 +608,7 @@ export function SynchronizedPreview({
                 <button
                   type="button"
                   onClick={() => setSubtitleDelayMs(0)}
-                  className="text-[10px] text-indigo-400 hover:text-indigo-300 px-1 font-medium transition-colors ml-0.5 hover:underline"
+                  className="text-[10px] text-blue-400 hover:text-blue-300 px-1 font-medium transition-colors ml-0.5 hover:underline"
                   title="Reset preview delay to 0ms"
                 >
                   Reset
@@ -615,7 +620,7 @@ export function SynchronizedPreview({
             <select
               value={subtitleSize}
               onChange={(e) => setSubtitleSize(e.target.value as "sm" | "md" | "lg")}
-              className="bg-slate-900 border border-white/10 text-slate-300 text-[11px] rounded-lg px-2 py-1 focus:outline-none"
+              className="bg-[#161a22] border border-white/[0.08] text-slate-300 text-[11px] rounded-md px-2 py-0.5 focus:outline-none"
               title="Subtitle Size"
             >
               <option value="sm">Text: S</option>
@@ -631,7 +636,7 @@ export function SynchronizedPreview({
                 setPlaybackRate(rate);
                 if (videoRef.current) videoRef.current.playbackRate = rate;
               }}
-              className="bg-slate-900 border border-white/10 text-slate-300 text-[11px] rounded-lg px-2 py-1 focus:outline-none"
+              className="bg-[#161a22] border border-white/[0.08] text-slate-300 text-[11px] rounded-md px-2 py-0.5 focus:outline-none"
               title="Playback Speed"
             >
               <option value="0.75">0.75x</option>

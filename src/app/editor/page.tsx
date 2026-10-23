@@ -376,41 +376,41 @@ export default function SubtitleEditorPage() {
   }, [cues, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen bg-[#090b0e] text-slate-100 flex flex-col font-sans selection:bg-blue-600/30 selection:text-blue-200">
       <Header />
 
-      <main className="flex-1 container mx-auto px-4 sm:px-8 py-8 space-y-6">
+      <main className="flex-1 container mx-auto px-4 sm:px-6 py-6 space-y-5">
         {!subtitleFile ? (
           /* Empty / Upload State */
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="text-center space-y-2 mb-8">
-              <Badge variant="gradient" className="py-1 px-3 text-xs uppercase tracking-wider font-semibold">
-                Subtitle Editor Workspace
-              </Badge>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+          <div className="max-w-3xl mx-auto space-y-6 pt-6">
+            <div className="text-center space-y-2 mb-6">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border border-white/[0.08] bg-white/[0.03] text-xs font-medium text-slate-300">
+                <span>Subtitle Editor</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
                 Edit & Fine-Tune Subtitles
               </h1>
-              <p className="text-base text-slate-400 max-w-xl mx-auto">
+              <p className="text-sm text-slate-400 max-w-lg mx-auto">
                 Adjust timestamps, add or split dialogue cues, repair drift, and synchronize lines before translation.
               </p>
             </div>
 
             {/* Create Blank Card or Upload */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
               <button
                 type="button"
                 onClick={handleCreateNewBlank}
-                className="flex items-center gap-3 p-5 rounded-2xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 hover:border-indigo-500/50 transition-all text-left group"
+                className="flex items-center gap-3 p-4 rounded-lg border border-white/[0.08] bg-[#12151b] hover:bg-[#151922] hover:border-white/[0.15] transition-colors text-left group"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600/20 text-indigo-400 group-hover:scale-105 transition-transform">
-                  <FilePlus className="h-6 w-6" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10 border border-blue-500/20 text-blue-400">
+                  <FilePlus className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white group-hover:text-indigo-300">
+                  <h3 className="text-xs font-semibold text-white group-hover:text-blue-400 transition-colors">
                     Create New Subtitle
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    Start authoring a new subtitle file from scratch with cue #1.
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Start authoring a clean subtitle file from scratch with cue #1.
                   </p>
                 </div>
               </button>
@@ -419,22 +419,22 @@ export default function SubtitleEditorPage() {
                 type="button"
                 onClick={() => {
                   const demo = parseSubtitleFile(
-                    `1\n00:00:01,200 --> 00:00:04,500\nCommander, telemetry indicates an unexpected gravitational distortion.\n\n2\n00:00:05,100 --> 00:00:08,400\nCan you stabilize our warp envelope, AURA?`,
-                    "space_mission.srt"
+                    `1\n00:00:01,200 --> 00:00:04,500\nOur audio engineers noticed a slight sync offset during the dialogue transitions.\n\n2\n00:00:05,100 --> 00:00:08,400\nLet's review the ambient background track.`,
+                    "interview_take_01.srt"
                   );
                   if (demo.success && demo.file) handleFileParsed(demo.file);
                 }}
-                className="flex items-center gap-3 p-5 rounded-2xl border border-white/10 bg-slate-900/60 hover:bg-slate-800/80 hover:border-indigo-500/50 transition-all text-left group"
+                className="flex items-center gap-3 p-4 rounded-lg border border-white/[0.08] bg-[#12151b] hover:bg-[#151922] hover:border-white/[0.15] transition-colors text-left group"
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-600/20 text-purple-400 group-hover:scale-105 transition-transform">
-                  <Sparkles className="h-6 w-6" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/[0.05] border border-white/[0.1] text-slate-300">
+                  <FileText className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white group-hover:text-purple-300">
-                    Load Quick Sample
+                  <h3 className="text-xs font-semibold text-white group-hover:text-blue-400 transition-colors">
+                    Load Sample Dialogue
                   </h3>
-                  <p className="text-xs text-slate-400">
-                    Load ready-to-edit dialogue to test splitting, merging, and timing math.
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Test cue splitting, merging, and millisecond time shifting.
                   </p>
                 </div>
               </button>
@@ -444,20 +444,20 @@ export default function SubtitleEditorPage() {
           </div>
         ) : (
           /* Active Subtitle Editor Workspace */
-          <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="space-y-4 animate-in fade-in duration-200">
             {/* Top Workspace Bar */}
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-xl shadow-2xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+            <div className="rounded-xl border border-white/[0.08] bg-[#12151b] p-3.5 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
               {/* File Info */}
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 shrink-0">
-                  <FileText className="h-6 w-6" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10 border border-blue-500/20 text-blue-400 shrink-0">
+                  <FileText className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-base font-bold text-white truncate max-w-xs sm:max-w-md">
+                    <h2 className="text-sm font-semibold text-white truncate max-w-xs sm:max-w-md">
                       {subtitleFile.filename}
                     </h2>
-                    <Badge variant="outline" className="text-[10px] uppercase font-mono py-0 px-2">
+                    <Badge variant="outline" className="text-[10px] uppercase font-mono py-0 px-1.5">
                       .{subtitleFile.format}
                     </Badge>
                   </div>
@@ -472,16 +472,16 @@ export default function SubtitleEditorPage() {
               </div>
 
               {/* Action Toolbar */}
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex flex-wrap items-center gap-2">
                 {/* Global Time Shift */}
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setShowTimeShiftModal(true)}
-                  className="gap-1.5 text-xs border-white/10 text-slate-300 hover:text-white"
+                  className="gap-1.5 h-8 text-xs text-slate-300 hover:text-white"
                   title="Shift all subtitle timings forward or backward"
                 >
-                  <Clock className="h-3.5 w-3.5 text-indigo-400" />
+                  <Clock className="h-3.5 w-3.5 text-slate-400" />
                   <span>Time Shift</span>
                 </Button>
 
@@ -490,8 +490,8 @@ export default function SubtitleEditorPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowReplaceBar(!showReplaceBar)}
-                  className={`gap-1.5 text-xs border-white/10 ${
-                    showReplaceBar ? "bg-indigo-600/20 text-indigo-300 border-indigo-500/40" : "text-slate-300 hover:text-white"
+                  className={`gap-1.5 h-8 text-xs ${
+                    showReplaceBar ? "bg-white/[0.08] text-white border-white/[0.2]" : "text-slate-300 hover:text-white"
                   }`}
                   title="Search and Replace across all cues"
                 >
@@ -504,18 +504,17 @@ export default function SubtitleEditorPage() {
                   variant="secondary"
                   size="sm"
                   onClick={() => setIsExportOpen(true)}
-                  className="gap-1.5 text-xs font-semibold"
+                  className="gap-1.5 h-8 text-xs"
                 >
-                  <Download className="h-3.5 w-3.5 text-indigo-400" />
+                  <Download className="h-3.5 w-3.5 text-slate-300" />
                   <span>Export</span>
                 </Button>
 
                 {/* Proceed to Translate Button */}
                 <Button
-                  variant="gradient"
                   size="sm"
                   onClick={handleProceedToTranslate}
-                  className="gap-2 font-bold shadow-indigo-500/30"
+                  className="gap-1.5 h-8 text-xs font-medium"
                   title="Transfer edited subtitles into Translation Workspace"
                 >
                   <Sparkles className="h-3.5 w-3.5" />
@@ -533,24 +532,24 @@ export default function SubtitleEditorPage() {
                       setCues([]);
                     }
                   }}
-                  className="text-slate-400 hover:text-white"
+                  className="h-8 w-8 text-slate-400 hover:text-white"
                   title="Upload another file"
                 >
-                  <FolderOpen className="h-4 w-4" />
+                  <FolderOpen className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </div>
 
             {/* Find & Replace Bar (when active) */}
             {showReplaceBar && (
-              <div className="rounded-2xl border border-white/10 bg-slate-900/90 p-4 backdrop-blur-md flex flex-wrap items-center gap-3 animate-in fade-in">
+              <div className="rounded-lg border border-white/[0.08] bg-[#12151b] p-3 flex flex-wrap items-center gap-2.5 animate-in fade-in">
                 <div className="relative flex-1 min-w-[200px]">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
                   <Input
                     placeholder="Find text..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 h-9 text-xs"
+                    className="pl-9 h-8 text-xs bg-[#161a22] border-white/[0.08]"
                   />
                 </div>
                 <div className="relative flex-1 min-w-[200px]">
@@ -559,7 +558,7 @@ export default function SubtitleEditorPage() {
                     placeholder="Replace with..."
                     value={replaceQuery}
                     onChange={(e) => setReplaceQuery(e.target.value)}
-                    className="pl-9 h-9 text-xs"
+                    className="pl-9 h-8 text-xs bg-[#161a22] border-white/[0.08]"
                   />
                 </div>
                 <Button
@@ -567,7 +566,7 @@ export default function SubtitleEditorPage() {
                   size="sm"
                   onClick={handleReplaceAll}
                   disabled={!searchQuery.trim()}
-                  className="text-xs whitespace-nowrap"
+                  className="h-8 text-xs whitespace-nowrap"
                 >
                   Replace All
                 </Button>
@@ -578,7 +577,7 @@ export default function SubtitleEditorPage() {
                     setSearchQuery("");
                     setReplaceQuery("");
                   }}
-                  className="text-xs"
+                  className="h-8 text-xs text-slate-400 hover:text-white"
                 >
                   Clear
                 </Button>
@@ -586,9 +585,9 @@ export default function SubtitleEditorPage() {
             )}
 
             {/* Two-Column Editor Layout: Video Preview + Cue Cards */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               {/* Left Column: Synchronized Video Preview */}
-              <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-24">
+              <div className="lg:col-span-5 space-y-3 lg:sticky lg:top-20">
                 <SynchronizedPreview
                   cues={cues}
                   currentCueId={activeCueId}
@@ -597,10 +596,10 @@ export default function SubtitleEditorPage() {
                 />
 
                 {/* Quick Add Cue at Current Video Time */}
-                <div className="p-4 rounded-2xl border border-white/10 bg-slate-900/60 backdrop-blur-md space-y-3">
+                <div className="p-3.5 rounded-lg border border-white/[0.08] bg-[#12151b] space-y-2.5">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-white flex items-center gap-1.5">
-                      <Plus className="h-4 w-4 text-indigo-400" />
+                    <span className="font-medium text-white flex items-center gap-1.5">
+                      <Plus className="h-3.5 w-3.5 text-blue-400" />
                       Add Dialogue Cue
                     </span>
                     <span className="text-slate-400 text-[11px]">{cues.length} total</span>
@@ -632,9 +631,9 @@ export default function SubtitleEditorPage() {
                       setActiveCueId(newCue.id);
                       setSeekTimeSeconds(start);
                     }}
-                    className="w-full text-xs font-semibold border-indigo-500/30 text-indigo-300 hover:bg-indigo-600/10"
+                    className="w-full h-8 text-xs font-medium border-white/[0.08] text-slate-300 hover:text-white hover:bg-white/[0.04]"
                   >
-                    <Plus className="h-3.5 w-3.5 mr-1.5" />
+                    <Plus className="h-3.5 w-3.5 mr-1" />
                     Append Cue to End
                   </Button>
                 </div>
@@ -656,16 +655,16 @@ export default function SubtitleEditorPage() {
                     return (
                       <div
                         key={cue.id}
-                        className={`rounded-2xl border transition-all duration-200 p-4 space-y-3 ${
+                        className={`rounded-lg border transition-colors p-3.5 space-y-2.5 ${
                           isActive
-                            ? "border-indigo-500/70 bg-indigo-950/25 shadow-lg shadow-indigo-500/10 ring-1 ring-indigo-500/30"
-                            : "border-white/10 bg-slate-900/50 hover:border-white/20 hover:bg-slate-900/80"
+                            ? "border-blue-500/60 bg-blue-500/[0.03] ring-1 ring-blue-500/20"
+                            : "border-white/[0.08] bg-[#12151b] hover:border-white/[0.14]"
                         }`}
                       >
                         {/* Cue Header with Timings & Actions */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/5 text-xs">
+                        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/[0.06] text-xs">
                           <div className="flex items-center gap-2">
-                            <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-white/5 font-mono text-[11px] font-bold text-slate-300">
+                            <span className="flex h-5 w-5 items-center justify-center rounded bg-white/[0.05] font-mono text-[11px] font-medium text-slate-300">
                               #{cue.id}
                             </span>
 
@@ -676,10 +675,10 @@ export default function SubtitleEditorPage() {
                                 setSeekTimeSeconds(cue.startSeconds);
                                 setActiveCueId(cue.id);
                               }}
-                              className="flex items-center gap-1 font-mono text-[11px] text-indigo-300 hover:text-indigo-200 bg-indigo-500/10 hover:bg-indigo-500/20 px-2 py-0.5 rounded-md transition-colors"
+                              className="flex items-center gap-1 font-mono text-[11px] text-blue-400 hover:text-blue-300 bg-blue-500/10 hover:bg-blue-500/20 px-2 py-0.5 rounded transition-colors"
                               title="Seek preview video to this cue"
                             >
-                              <Play className="h-3 w-3 fill-current" />
+                              <Play className="h-2.5 w-2.5 fill-current" />
                               <span>Play</span>
                             </button>
 
@@ -693,7 +692,7 @@ export default function SubtitleEditorPage() {
                             <button
                               type="button"
                               onClick={() => handleSplitCue(cue.id)}
-                              className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                              className="p-1 text-slate-400 hover:text-white hover:bg-white/[0.08] rounded transition-colors"
                               title="Split this cue into two parts"
                             >
                               <Split className="h-3.5 w-3.5" />
@@ -701,7 +700,7 @@ export default function SubtitleEditorPage() {
                             <button
                               type="button"
                               onClick={() => handleMergeWithNext(cue.id)}
-                              className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                              className="p-1 text-slate-400 hover:text-white hover:bg-white/[0.08] rounded transition-colors"
                               title="Merge with next cue"
                             >
                               <Merge className="h-3.5 w-3.5" />
@@ -709,7 +708,7 @@ export default function SubtitleEditorPage() {
                             <button
                               type="button"
                               onClick={() => handleAddCueAfter(cue.id)}
-                              className="p-1.5 text-slate-400 hover:text-indigo-300 hover:bg-indigo-500/10 rounded-lg transition-colors"
+                              className="p-1 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded transition-colors"
                               title="Insert cue after this"
                             >
                               <Plus className="h-3.5 w-3.5" />
@@ -717,7 +716,7 @@ export default function SubtitleEditorPage() {
                             <button
                               type="button"
                               onClick={() => handleDeleteCue(cue.id)}
-                              className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                              className="p-1 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
                               title="Delete cue"
                             >
                               <Trash2 className="h-3.5 w-3.5" />
@@ -728,7 +727,7 @@ export default function SubtitleEditorPage() {
                         {/* Timing Inputs Row */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                           {/* Start Timestamp */}
-                          <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-xl px-2.5 py-1.5">
+                          <div className="flex items-center gap-1.5 bg-[#161a22] border border-white/[0.08] rounded-md px-2 py-1">
                             <span className="text-slate-400 font-mono text-[11px] w-10">Start:</span>
                             <input
                               type="text"
@@ -740,7 +739,7 @@ export default function SubtitleEditorPage() {
                               <button
                                 type="button"
                                 onClick={() => handleNudgeTiming(cue.id, "start", -0.2)}
-                                className="px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/15 text-[10px] text-slate-300"
+                                className="px-1.5 py-0.5 rounded bg-white/[0.05] hover:bg-white/[0.1] text-[10px] text-slate-300"
                                 title="-0.2s"
                               >
                                 -0.2s
@@ -748,7 +747,7 @@ export default function SubtitleEditorPage() {
                               <button
                                 type="button"
                                 onClick={() => handleNudgeTiming(cue.id, "start", 0.2)}
-                                className="px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/15 text-[10px] text-slate-300"
+                                className="px-1.5 py-0.5 rounded bg-white/[0.05] hover:bg-white/[0.1] text-[10px] text-slate-300"
                                 title="+0.2s"
                               >
                                 +0.2s
@@ -758,8 +757,8 @@ export default function SubtitleEditorPage() {
 
                           {/* End Timestamp */}
                           <div
-                            className={`flex items-center gap-1.5 bg-black/40 border rounded-xl px-2.5 py-1.5 ${
-                              isTimingInvalid ? "border-red-500 text-red-400" : "border-white/10"
+                            className={`flex items-center gap-1.5 bg-[#161a22] border rounded-md px-2 py-1 ${
+                              isTimingInvalid ? "border-red-500 text-red-400" : "border-white/[0.08]"
                             }`}
                           >
                             <span className="text-slate-400 font-mono text-[11px] w-10">End:</span>
@@ -773,7 +772,7 @@ export default function SubtitleEditorPage() {
                               <button
                                 type="button"
                                 onClick={() => handleNudgeTiming(cue.id, "end", -0.2)}
-                                className="px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/15 text-[10px] text-slate-300"
+                                className="px-1.5 py-0.5 rounded bg-white/[0.05] hover:bg-white/[0.1] text-[10px] text-slate-300"
                                 title="-0.2s"
                               >
                                 -0.2s
@@ -781,7 +780,7 @@ export default function SubtitleEditorPage() {
                               <button
                                 type="button"
                                 onClick={() => handleNudgeTiming(cue.id, "end", 0.2)}
-                                className="px-1.5 py-0.5 rounded bg-white/5 hover:bg-white/15 text-[10px] text-slate-300"
+                                className="px-1.5 py-0.5 rounded bg-white/[0.05] hover:bg-white/[0.1] text-[10px] text-slate-300"
                                 title="+0.2s"
                               >
                                 +0.2s
@@ -823,7 +822,7 @@ export default function SubtitleEditorPage() {
                             value={cue.originalText}
                             onChange={(e) => handleUpdateText(cue.id, e.target.value)}
                             rows={2}
-                            className="w-full rounded-xl border border-white/10 bg-black/50 p-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 leading-relaxed resize-y transition-all"
+                            className="w-full rounded-md border border-white/[0.08] bg-[#161a22] p-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 leading-relaxed resize-y transition-colors"
                             placeholder="Enter subtitle dialogue line..."
                           />
                         </div>

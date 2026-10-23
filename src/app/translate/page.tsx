@@ -11,22 +11,17 @@ import { ExportModal } from "@/components/modals/ExportModal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SubtitleFile, SubtitleCue, TranslationSettings } from "@/lib/subtitles/types";
-import { SUPPORTED_LANGUAGES, getLanguageName } from "@/lib/translation/languages";
+import { SUPPORTED_LANGUAGES } from "@/lib/translation/languages";
 import { saveActiveSubtitle, loadActiveSubtitle } from "@/lib/subtitles/storage";
 import {
-  Sparkles,
   ArrowRight,
   Download,
-  Settings as SettingsIcon,
   RefreshCw,
-  Play,
-  Pause,
   Film,
   FileText,
-  CheckCircle2,
-  AlertTriangle,
   FolderOpen,
   Subtitles,
+  Languages,
 } from "lucide-react";
 
 export default function TranslateWorkspace() {
@@ -116,7 +111,6 @@ export default function TranslateWorkspace() {
   // Batch translation loop
   const handleStartBatchTranslation = async (onlyUntranslated = false) => {
     if (isTranslating) {
-      // Abort if currently running
       abortControllerRef.current?.abort();
       setIsTranslating(false);
       return;
@@ -138,7 +132,6 @@ export default function TranslateWorkspace() {
         const batchCues = cuesToTranslate.slice(b * batchSize, (b + 1) * batchSize);
         const batchIds = new Set(batchCues.map((c) => c.id));
 
-        // Mark current batch as translating
         setCues((prev) =>
           prev.map((c) => (batchIds.has(c.id) ? { ...c, status: "translating" } : c))
         );
@@ -238,7 +231,7 @@ export default function TranslateWorkspace() {
   const completedCount = cues.filter((c) => c.translatedText && c.status === "completed").length;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30 selection:text-indigo-200">
+    <div className="min-h-screen bg-[#090b0e] text-slate-100 flex flex-col font-sans selection:bg-blue-600/30 selection:text-blue-200">
       <Header
         onOpenSettings={() => setIsSettingsOpen(true)}
         activeProvider={
@@ -250,19 +243,19 @@ export default function TranslateWorkspace() {
         }
       />
 
-      <main className="flex-1 container mx-auto px-4 sm:px-8 py-8 space-y-6">
+      <main className="flex-1 container mx-auto px-4 sm:px-6 py-6 space-y-5">
         {/* If no file is loaded yet, show the Uploader */}
         {!subtitleFile ? (
-          <div className="max-w-4xl mx-auto space-y-6">
-            <div className="text-center space-y-2 mb-8">
-              <Badge variant="gradient" className="py-1 px-3 text-xs uppercase tracking-wider font-semibold">
-                Subtitle Translation Studio
-              </Badge>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
-                Upload & Localize Subtitles
+          <div className="max-w-3xl mx-auto space-y-6 pt-6">
+            <div className="text-center space-y-2 mb-6">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md border border-white/[0.08] bg-white/[0.03] text-xs font-medium text-slate-300">
+                <span>Studio Workspace</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                Upload & Translate Subtitles
               </h1>
-              <p className="text-base text-slate-400 max-w-xl mx-auto">
-                Preserve frame-accurate timestamps, formatting tags, and reading pace while translating across 50+ languages.
+              <p className="text-sm text-slate-400 max-w-lg mx-auto">
+                Timecodes, line breaks, and formatting tags are preserved across all translation engines.
               </p>
             </div>
 
@@ -270,25 +263,24 @@ export default function TranslateWorkspace() {
           </div>
         ) : (
           /* Active Workspace Studio */
-          <div className="space-y-6 animate-in fade-in duration-300">
+          <div className="space-y-4 animate-in fade-in duration-200">
             {/* Top Workspace Bar */}
-            <div className="rounded-3xl border border-white/10 bg-slate-900/70 p-5 backdrop-blur-xl shadow-2xl flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4">
+            <div className="rounded-xl border border-white/[0.08] bg-[#12151b] p-3.5 shadow-sm flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
               {/* File Info */}
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 shrink-0">
-                  <FileText className="h-6 w-6" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600/10 border border-blue-500/20 text-blue-400 shrink-0">
+                  <FileText className="h-5 w-5" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h2 className="text-base font-bold text-white truncate max-w-xs sm:max-w-md">
+                    <h2 className="text-sm font-semibold text-white truncate max-w-xs sm:max-w-md">
                       {subtitleFile.filename.slice(0, 20)}
-                      {/* cut the string to length */}
                     </h2>
-                    <Badge variant="outline" className="text-[10px] uppercase font-mono py-0 px-2">
+                    <Badge variant="outline" className="text-[10px] uppercase font-mono py-0 px-1.5">
                       .{subtitleFile.format}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-slate-400 mt-0.5">
+                  <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
                     <span>{cues.length} Cues</span>
                     <span>•</span>
                     <span className="text-emerald-400 font-medium">
@@ -299,35 +291,35 @@ export default function TranslateWorkspace() {
               </div>
 
               {/* Language Selection & Translation Controls */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2.5">
                 {/* Source Language */}
-                <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-xl px-2.5 py-1.5 text-xs">
+                <div className="flex items-center gap-1.5 bg-[#161a22] border border-white/[0.08] rounded-lg px-2.5 py-1 text-xs">
                   <span className="text-slate-400 font-medium">From:</span>
                   <select
                     value={settings.sourceLang}
                     onChange={(e) => setSettings((p) => ({ ...p, sourceLang: e.target.value }))}
-                    className="bg-transparent text-white font-semibold focus:outline-none cursor-pointer"
+                    className="bg-transparent text-white font-medium focus:outline-none cursor-pointer"
                   >
                     {SUPPORTED_LANGUAGES.map((lang) => (
-                      <option key={lang.code} value={lang.code} className="bg-slate-900 text-white">
+                      <option key={lang.code} value={lang.code} className="bg-[#12151b] text-white">
                         {lang.flag} {lang.name}
                       </option>
                     ))}
                   </select>
                 </div>
 
-                <ArrowRight className="h-4 w-4 text-slate-500 hidden sm:inline" />
+                <ArrowRight className="h-3.5 w-3.5 text-slate-500 hidden sm:inline" />
 
                 {/* Target Language */}
-                <div className="flex items-center gap-1.5 bg-black/40 border border-white/10 rounded-xl px-2.5 py-1.5 text-xs">
+                <div className="flex items-center gap-1.5 bg-[#161a22] border border-white/[0.08] rounded-lg px-2.5 py-1 text-xs">
                   <span className="text-slate-400 font-medium">To:</span>
                   <select
                     value={settings.targetLang}
                     onChange={(e) => setSettings((p) => ({ ...p, targetLang: e.target.value }))}
-                    className="bg-transparent text-indigo-300 font-semibold focus:outline-none cursor-pointer"
+                    className="bg-transparent text-blue-400 font-medium focus:outline-none cursor-pointer"
                   >
                     {SUPPORTED_LANGUAGES.filter((l) => l.code !== "auto").map((lang) => (
-                      <option key={lang.code} value={lang.code} className="bg-slate-900 text-white">
+                      <option key={lang.code} value={lang.code} className="bg-[#12151b] text-white">
                         {lang.flag} {lang.name}
                       </option>
                     ))}
@@ -336,18 +328,17 @@ export default function TranslateWorkspace() {
 
                 {/* Translate Button */}
                 <Button
-                  variant="gradient"
                   onClick={() => handleStartBatchTranslation(false)}
-                  className="gap-2 font-bold shadow-indigo-500/30"
+                  className="gap-1.5 h-8 text-xs font-medium"
                 >
                   {isTranslating ? (
                     <>
-                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      <RefreshCw className="h-3.5 w-3.5 animate-spin" />
                       <span>Stop Translation</span>
                     </>
                   ) : (
                     <>
-                      <Sparkles className="h-4 w-4" />
+                      <Languages className="h-3.5 w-3.5" />
                       <span>{completedCount === 0 ? "Translate All" : "Translate File"}</span>
                     </>
                   )}
@@ -358,11 +349,11 @@ export default function TranslateWorkspace() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="gap-1.5 border-white/10 text-xs text-slate-300 hover:text-white"
+                    className="gap-1.5 h-8 text-xs text-slate-300 hover:text-white"
                     title="Open in Subtitle Editor to adjust text or timestamps"
                   >
-                    <Subtitles className="h-3.5 w-3.5 text-indigo-400" />
-                    <span className="hidden sm:inline">Edit Subtitles</span>
+                    <Subtitles className="h-3.5 w-3.5 text-slate-400" />
+                    <span className="hidden sm:inline">Editor</span>
                   </Button>
                 </Link>
 
@@ -371,8 +362,9 @@ export default function TranslateWorkspace() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowVideoPreview(!showVideoPreview)}
-                  className={`gap-1.5 border-white/10 text-xs ${showVideoPreview ? "bg-indigo-600/20 text-indigo-300 border-indigo-500/40" : "text-slate-300"
-                    }`}
+                  className={`gap-1.5 h-8 text-xs ${
+                    showVideoPreview ? "bg-white/[0.08] text-white border-white/[0.2]" : "text-slate-300"
+                  }`}
                   title="Toggle Synchronized Video Preview"
                 >
                   <Film className="h-3.5 w-3.5" />
@@ -384,9 +376,9 @@ export default function TranslateWorkspace() {
                   variant="secondary"
                   size="sm"
                   onClick={() => setIsExportOpen(true)}
-                  className="gap-1.5 text-xs font-semibold"
+                  className="gap-1.5 h-8 text-xs"
                 >
-                  <Download className="h-3.5 w-3.5 text-indigo-400" />
+                  <Download className="h-3.5 w-3.5 text-slate-300" />
                   <span>Export</span>
                 </Button>
 
@@ -400,27 +392,27 @@ export default function TranslateWorkspace() {
                       setCues([]);
                     }
                   }}
-                  className="text-slate-400 hover:text-white"
+                  className="h-8 w-8 text-slate-400 hover:text-white"
                   title="Upload another file"
                 >
-                  <FolderOpen className="h-4 w-4" />
+                  <FolderOpen className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </div>
 
             {/* Translation Progress Indicator (when active) */}
             {isTranslating && (
-              <div className="rounded-2xl border border-indigo-500/30 bg-indigo-950/40 p-4 space-y-2 animate-in fade-in">
+              <div className="rounded-lg border border-blue-500/20 bg-blue-500/[0.05] p-3 space-y-1.5 animate-in fade-in">
                 <div className="flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2 font-medium text-indigo-200">
-                    <RefreshCw className="h-3.5 w-3.5 animate-spin text-indigo-400" />
+                  <div className="flex items-center gap-2 font-medium text-blue-300">
+                    <RefreshCw className="h-3 w-3 animate-spin text-blue-400" />
                     <span>Processing: {currentBatchText}</span>
                   </div>
-                  <span className="font-mono font-bold text-indigo-300">{translationProgress}%</span>
+                  <span className="font-mono font-semibold text-blue-300">{translationProgress}%</span>
                 </div>
-                <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 transition-all duration-300 rounded-full"
+                    className="h-full bg-blue-500 transition-all duration-200 rounded-full"
                     style={{ width: `${translationProgress}%` }}
                   />
                 </div>
@@ -428,10 +420,10 @@ export default function TranslateWorkspace() {
             )}
 
             {/* Two-Column Workspace: Video Preview & Subtitle Editor */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
               {/* Synchronized Video Preview (sticky or collapsible) */}
               {showVideoPreview && (
-                <div className="lg:col-span-5 space-y-4 lg:sticky lg:top-24">
+                <div className="lg:col-span-5 space-y-3 lg:sticky lg:top-20">
                   <SynchronizedPreview
                     cues={cues}
                     currentCueId={activeCueId}
@@ -440,18 +432,18 @@ export default function TranslateWorkspace() {
                   />
 
                   {/* Quick Summary Card */}
-                  <div className="p-4 rounded-2xl border border-white/5 bg-slate-900/50 backdrop-blur-md space-y-2 text-xs">
-                    <div className="flex items-center justify-between text-slate-300">
+                  <div className="p-3.5 rounded-lg border border-white/[0.08] bg-[#12151b] space-y-2 text-xs">
+                    <div className="flex items-center justify-between text-slate-400">
                       <span>Reading Speed Standard:</span>
-                      <span className="text-indigo-400 font-mono font-semibold">Max 20-22 CPS</span>
+                      <span className="text-slate-200 font-mono font-medium">Max 17–20 CPS</span>
                     </div>
-                    <div className="flex items-center justify-between text-slate-300">
+                    <div className="flex items-center justify-between text-slate-400">
                       <span>Timing Preservation:</span>
-                      <span className="text-emerald-400 font-semibold">100% Guaranteed</span>
+                      <span className="text-emerald-400 font-medium">Frame-accurate</span>
                     </div>
-                    <div className="flex items-center justify-between text-slate-300">
+                    <div className="flex items-center justify-between text-slate-400">
                       <span>Formatting Tags (&lt;i&gt;, &lt;b&gt;):</span>
-                      <span className="text-indigo-400 font-semibold">Retained in sync</span>
+                      <span className="text-blue-400 font-medium">Preserved</span>
                     </div>
                   </div>
                 </div>
