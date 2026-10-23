@@ -54,6 +54,17 @@ export function Header({ onOpenSettings, activeProvider = "Free Engine" }: Heade
             Overview
           </Link>
           <Link
+            href="/editor"
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              pathname === "/editor"
+                ? "bg-indigo-600 text-white shadow-md shadow-indigo-500/30"
+                : "text-slate-400 hover:text-white hover:bg-white/5"
+            }`}
+          >
+            <Subtitles className="h-3.5 w-3.5 text-indigo-300" />
+            Edit Subtitles
+          </Link>
+          <Link
             href="/translate"
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               pathname === "/translate"

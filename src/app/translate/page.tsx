@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Header } from "@/components/layout/Header";
 import { SubtitleUploader } from "@/components/studio/SubtitleUploader";
 import { SubtitleEditor } from "@/components/studio/SubtitleEditor";
@@ -11,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SubtitleFile, SubtitleCue, TranslationSettings } from "@/lib/subtitles/types";
 import { SUPPORTED_LANGUAGES, getLanguageName } from "@/lib/translation/languages";
+import { saveActiveSubtitle, loadActiveSubtitle } from "@/lib/subtitles/storage";
 import {
   Sparkles,
   ArrowRight,
@@ -24,6 +26,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   FolderOpen,
+  Subtitles,
 } from "lucide-react";
 
 export default function TranslateWorkspace() {
@@ -53,7 +56,7 @@ export default function TranslateWorkspace() {
   const [currentBatchText, setCurrentBatchText] = React.useState("");
   const abortControllerRef = React.useRef<AbortController | null>(null);
 
-  // Load saved settings from localStorage on mount
+  // Load saved settings and existing active subtitle from storage on mount
   React.useEffect(() => {
     try {
       const saved = localStorage.getItem("sublingo_settings");
@@ -64,7 +67,24 @@ export default function TranslateWorkspace() {
     } catch {
       // ignore
     }
+
+    const existingSubtitle = loadActiveSubtitle();
+    if (existingSubtitle && existingSubtitle.cues && existingSubtitle.cues.length > 0) {
+      setSubtitleFile(existingSubtitle);
+      setCues(existingSubtitle.cues);
+      setActiveCueId(existingSubtitle.cues[0]?.id);
+    }
   }, []);
+
+  // Sync cue updates to session storage
+  React.useEffect(() => {
+    if (subtitleFile && cues.length > 0) {
+      saveActiveSubtitle({
+        ...subtitleFile,
+        cues,
+      });
+    }
+  }, [cues, subtitleFile]);
 
   const handleSaveSettings = (newSettings: TranslationSettings) => {
     setSettings(newSettings);
@@ -331,6 +351,19 @@ export default function TranslateWorkspace() {
                     </>
                   )}
                 </Button>
+
+                {/* Edit Subtitles in Editor */}
+                <Link href="/editor">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-1.5 border-white/10 text-xs text-slate-300 hover:text-white"
+                    title="Open in Subtitle Editor to adjust text or timestamps"
+                  >
+                    <Subtitles className="h-3.5 w-3.5 text-indigo-400" />
+                    <span className="hidden sm:inline">Edit Subtitles</span>
+                  </Button>
+                </Link>
 
                 {/* Video Preview Toggle */}
                 <Button

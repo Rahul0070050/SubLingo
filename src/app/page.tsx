@@ -65,14 +65,14 @@ export default function LandingPage() {
                 </Button>
               </Link>
 
-              <Link href="/translate">
+              <Link href="/editor">
                 <Button
                   variant="outline"
                   size="lg"
                   className="w-full sm:w-auto text-base font-medium border-white/10 text-slate-300 hover:text-white h-13 px-6"
                 >
-                  <Play className="h-4 w-4 mr-2 text-indigo-400 fill-current" />
-                  Try Sample Subtitles
+                  <Subtitles className="h-4 w-4 mr-2 text-indigo-400" />
+                  Edit Subtitles
                 </Button>
               </Link>
             </div>

@@ -321,33 +321,30 @@ export function SynchronizedPreview({
             <button
               type="button"
               onClick={() => setPreviewMode("translated")}
-              className={`px-2 py-1 rounded-md font-semibold transition-all ${
-                previewMode === "translated"
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-2 py-1 rounded-md font-semibold transition-all ${previewMode === "translated"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               Translated
             </button>
             <button
               type="button"
               onClick={() => setPreviewMode("bilingual")}
-              className={`px-2 py-1 rounded-md font-semibold transition-all ${
-                previewMode === "bilingual"
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-2 py-1 rounded-md font-semibold transition-all ${previewMode === "bilingual"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               Bilingual
             </button>
             <button
               type="button"
               onClick={() => setPreviewMode("original")}
-              className={`px-2 py-1 rounded-md font-semibold transition-all ${
-                previewMode === "original"
-                  ? "bg-indigo-600 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white"
-              }`}
+              className={`px-2 py-1 rounded-md font-semibold transition-all ${previewMode === "original"
+                ? "bg-indigo-600 text-white shadow-sm"
+                : "text-slate-400 hover:text-white"
+                }`}
             >
               Original
             </button>
@@ -385,9 +382,8 @@ export function SynchronizedPreview({
         }}
         onDragLeave={() => setIsDraggingVideo(false)}
         onDrop={handleDropVideo}
-        className={`relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden group select-none transition-colors ${
-          isDraggingVideo ? "ring-2 ring-indigo-500 bg-indigo-950/40" : ""
-        }`}
+        className={`relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden group select-none transition-colors ${isDraggingVideo ? "ring-2 ring-indigo-500 bg-indigo-950/40" : ""
+          }`}
       >
         {/* Active Local Video Player */}
         {mediaType === "video" && mediaSrc ? (
@@ -440,9 +436,8 @@ export function SynchronizedPreview({
         {/* Live Cinema Subtitle Overlay (Netflix/Theater grade) */}
         {activeCue && (
           <div
-            className={`absolute ${
-              subtitlePosition === "top" ? "top-6" : "bottom-6"
-            } left-4 right-4 z-20 flex flex-col items-center justify-center text-center pointer-events-none transition-all duration-150 animate-in fade-in zoom-in-95`}
+            className={`absolute ${subtitlePosition === "top" ? "top-6" : "bottom-6"
+              } left-4 right-4 z-20 flex flex-col items-center justify-center text-center pointer-events-none transition-all duration-150 animate-in fade-in zoom-in-95`}
           >
             <div
               className={`max-w-3xl rounded-xl bg-black/85 backdrop-blur-md border border-white/20 shadow-2xl text-shadow ${subtitleSizeClasses[subtitleSize]}`}
@@ -591,9 +586,8 @@ export function SynchronizedPreview({
                 -
               </button>
               <span
-                className={`font-mono px-1 font-semibold min-w-[50px] text-center ${
-                  subtitleDelayMs !== 0 ? "text-amber-400" : "text-slate-300"
-                }`}
+                className={`font-mono px-1 font-semibold min-w-[50px] text-center ${subtitleDelayMs !== 0 ? "text-amber-400" : "text-slate-300"
+                  }`}
               >
                 {subtitleDelayMs > 0 ? `+${subtitleDelayMs}` : subtitleDelayMs}ms
               </span>
