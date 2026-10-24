@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = verifyOtpAndCreatePasskey(email, otp);
+    const result = await verifyOtpAndCreatePasskey(email, otp);
 
     if (!result.success || !result.user || !result.passkey) {
       return NextResponse.json(

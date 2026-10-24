@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    const session = getActiveSession(passkey);
+    const session = await getActiveSession(passkey);
 
     if (!session || session.isExpired) {
       const res = NextResponse.json({

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = issueOtp(email);
+    const result = await issueOtp(email);
 
     if (!result.success) {
       return NextResponse.json(

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const result = validateMasterPasskey(passkey);
+    const result = await validateMasterPasskey(passkey);
 
     if (!result.valid || !result.user) {
       return NextResponse.json(

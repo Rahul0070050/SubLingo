@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const passkey = request.cookies.get("sublingo_passkey")?.value;
     if (passkey) {
-      revokePasskey(passkey);
+      await revokePasskey(passkey);
     }
 
     const response = NextResponse.json({
