@@ -8,6 +8,7 @@ import { SubtitleEditor } from "@/components/studio/SubtitleEditor";
 import { SynchronizedPreview } from "@/components/studio/SynchronizedPreview";
 import { SettingsModal } from "@/components/modals/SettingsModal";
 import { ExportModal } from "@/components/modals/ExportModal";
+import { PublishModal } from "@/components/modals/PublishModal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SubtitleFile, SubtitleCue, TranslationSettings } from "@/lib/subtitles/types";
@@ -23,6 +24,8 @@ import {
   FolderOpen,
   Subtitles,
   Languages,
+  Globe,
+  UploadCloud,
 } from "lucide-react";
 
 export default function TranslateWorkspace() {
@@ -30,6 +33,7 @@ export default function TranslateWorkspace() {
   const [cues, setCues] = React.useState<SubtitleCue[]>([]);
   const [activeCueId, setActiveCueId] = React.useState<number | undefined>(undefined);
   const [seekTimeSeconds, setSeekTimeSeconds] = React.useState<number | undefined>(undefined);
+  const [isPublishOpen, setIsPublishOpen] = React.useState(false);
 
   // Settings
   const [settings, setSettings] = React.useState<TranslationSettings>({
@@ -348,19 +352,6 @@ export default function TranslateWorkspace() {
                   )}
                 </Button>
 
-                {/* Edit Subtitles in Editor */}
-                <Link href="/editor">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-1.5 h-8 text-xs text-slate-300 hover:text-white"
-                    title="Open in Subtitle Editor to adjust text or timestamps"
-                  >
-                    <Subtitles className="h-3.5 w-3.5 text-slate-400" />
-                    <span className="hidden sm:inline">Editor</span>
-                  </Button>
-                </Link>
-
                 {/* Video Preview Toggle */}
                 <Button
                   variant="outline"
@@ -372,6 +363,18 @@ export default function TranslateWorkspace() {
                 >
                   <Film className="h-3.5 w-3.5" />
                   <span className="hidden sm:inline">Preview</span>
+                </Button>
+
+                {/* Publish Button */}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsPublishOpen(true)}
+                  className="gap-1.5 h-8 text-xs text-blue-400 hover:text-white border-blue-500/30 hover:bg-blue-500/10 hover:border-blue-500/60 transition-colors"
+                  title="Publish subtitle release and view details"
+                >
+                  <UploadCloud className="h-3.5 w-3.5" />
+                  <span>Publish</span>
                 </Button>
 
                 {/* Export Button */}
@@ -478,13 +481,23 @@ export default function TranslateWorkspace() {
       />
 
       {subtitleFile && (
-        <ExportModal
-          isOpen={isExportOpen}
-          onClose={() => setIsExportOpen(false)}
-          cues={cues}
-          originalFilename={subtitleFile.filename}
-          defaultFormat={subtitleFile.format}
-        />
+        <>
+          <ExportModal
+            isOpen={isExportOpen}
+            onClose={() => setIsExportOpen(false)}
+            cues={cues}
+            originalFilename={subtitleFile.filename}
+            defaultFormat={subtitleFile.format}
+          />
+          <PublishModal
+            isOpen={isPublishOpen}
+            onClose={() => setIsPublishOpen(false)}
+            subtitleFile={subtitleFile}
+            cues={cues}
+            sourceLang={settings.sourceLang}
+            targetLang={settings.targetLang}
+          />
+        </>
       )}
     </div>
   );

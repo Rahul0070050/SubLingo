@@ -35,32 +35,29 @@ export function Header({ onOpenSettings, activeProvider = "Free Engine" }: Heade
         <nav className="hidden md:flex items-center gap-1 bg-white/[0.03] p-1 rounded-lg border border-white/[0.06]">
           <Link
             href="/"
-            className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-              pathname === "/"
-                ? "bg-white/[0.08] text-white"
-                : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
-            }`}
+            className={`px-3 py-1 rounded-md text-xs font-medium transition-colors ${pathname === "/"
+              ? "bg-white/[0.08] text-white"
+              : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+              }`}
           >
             Overview
           </Link>
           <Link
             href="/translate"
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-              pathname === "/translate"
-                ? "bg-blue-600 text-white"
-                : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
-            }`}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${pathname === "/translate"
+              ? "bg-blue-600 text-white"
+              : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+              }`}
           >
             <Languages className="h-3.5 w-3.5" />
             <span>Translate</span>
           </Link>
           <Link
             href="/editor"
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${
-              pathname === "/editor"
-                ? "bg-blue-600 text-white"
-                : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
-            }`}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${pathname === "/editor"
+              ? "bg-blue-600 text-white"
+              : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+              }`}
           >
             <Layers className="h-3.5 w-3.5" />
             <span>Editor</span>
@@ -84,12 +81,12 @@ export function Header({ onOpenSettings, activeProvider = "Free Engine" }: Heade
             </Button>
           )}
 
-          <Link href="/translate">
+          {pathname === "/" && <Link href="/translate">
             <Button size="sm" className="gap-1.5 text-xs h-8">
               <Languages className="h-3.5 w-3.5" />
               <span>Open Studio</span>
             </Button>
-          </Link>
+          </Link>}
         </div>
       </div>
     </header>
