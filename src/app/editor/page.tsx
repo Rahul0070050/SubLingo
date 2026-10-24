@@ -18,6 +18,9 @@ import {
   parseSubtitleFile,
 } from "@/lib/subtitles/parser";
 import { saveActiveSubtitle, loadActiveSubtitle } from "@/lib/subtitles/storage";
+import { TransliteratedTextarea } from "@/components/studio/TransliteratedTextarea";
+import { SUPPORTED_LANGUAGES } from "@/lib/translation/languages";
+import { TRANSLITERATION_MAP } from "@/lib/transliteration/languages";
 import {
   Subtitles,
   Plus,
@@ -48,6 +51,7 @@ export default function SubtitleEditorPage() {
   const [activeCueId, setActiveCueId] = React.useState<number | undefined>(undefined);
   const [seekTimeSeconds, setSeekTimeSeconds] = React.useState<number | undefined>(undefined);
   const [isExportOpen, setIsExportOpen] = React.useState(false);
+  const [typingLang, setTypingLang] = React.useState<string>("en");
 
   // Search & Replace
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -499,6 +503,38 @@ export default function SubtitleEditorPage() {
                   <span>Find & Replace</span>
                 </Button>
 
+                {/* Typing Language / Transliteration Selector */}
+                <div className="flex items-center gap-1.5 bg-[#161a22] border border-white/[0.08] rounded-lg px-2.5 py-1 text-xs">
+                  <span className="text-slate-400 font-medium">Input:</span>
+                  <select
+                    value={typingLang}
+                    onChange={(e) => setTypingLang(e.target.value)}
+                    className="bg-transparent text-blue-400 font-medium focus:outline-none cursor-pointer"
+                  >
+                    <option value="en" className="bg-[#12151b] text-white">
+                      🇺🇸 English (Direct)
+                    </option>
+                    <option value="ml" className="bg-[#12151b] text-white">
+                      🇮🇳 Malayalam (Manglish)
+                    </option>
+                    <option value="hi" className="bg-[#12151b] text-white">
+                      🇮🇳 Hindi (Hinglish)
+                    </option>
+                    <option value="ta" className="bg-[#12151b] text-white">
+                      🇮🇳 Tamil (Tanglish)
+                    </option>
+                    <option value="te" className="bg-[#12151b] text-white">
+                      🇮🇳 Telugu (Phonetic)
+                    </option>
+                    <option value="bn" className="bg-[#12151b] text-white">
+                      🇧🇩 Bengali (Phonetic)
+                    </option>
+                    <option value="ar" className="bg-[#12151b] text-white">
+                      🇸🇦 Arabic (Phonetic)
+                    </option>
+                  </select>
+                </div>
+
                 {/* Export / Download */}
                 <Button
                   variant="secondary"
@@ -818,12 +854,12 @@ export default function SubtitleEditorPage() {
                             </div>
                           </div>
 
-                          <textarea
+                          <TransliteratedTextarea
                             value={cue.originalText}
-                            onChange={(e) => handleUpdateText(cue.id, e.target.value)}
-                            rows={2}
-                            className="w-full rounded-md border border-white/[0.08] bg-[#161a22] p-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 leading-relaxed resize-y transition-colors"
+                            onChange={(val) => handleUpdateText(cue.id, val)}
+                            targetLang={typingLang}
                             placeholder="Enter subtitle dialogue line..."
+                            cueId={cue.id}
                           />
                         </div>
                       </div>

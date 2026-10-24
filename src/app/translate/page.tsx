@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { SubtitleFile, SubtitleCue, TranslationSettings } from "@/lib/subtitles/types";
 import { SUPPORTED_LANGUAGES } from "@/lib/translation/languages";
+import { TRANSLITERATION_MAP } from "@/lib/transliteration/languages";
 import { saveActiveSubtitle, loadActiveSubtitle } from "@/lib/subtitles/storage";
 import {
   ArrowRight,
@@ -318,11 +319,14 @@ export default function TranslateWorkspace() {
                     onChange={(e) => setSettings((p) => ({ ...p, targetLang: e.target.value }))}
                     className="bg-transparent text-blue-400 font-medium focus:outline-none cursor-pointer"
                   >
-                    {SUPPORTED_LANGUAGES.filter((l) => l.code !== "auto").map((lang) => (
-                      <option key={lang.code} value={lang.code} className="bg-[#12151b] text-white">
-                        {lang.flag} {lang.name}
-                      </option>
-                    ))}
+                    {SUPPORTED_LANGUAGES.filter((l) => l.code !== "auto").map((lang) => {
+                      const trans = TRANSLITERATION_MAP[lang.code];
+                      return (
+                        <option key={lang.code} value={lang.code} className="bg-[#12151b] text-white">
+                          {lang.flag} {lang.name} {trans ? `(${trans.inputMode})` : ""}
+                        </option>
+                      );
+                    })}
                   </select>
                 </div>
 
@@ -362,9 +366,8 @@ export default function TranslateWorkspace() {
                   variant="outline"
                   size="sm"
                   onClick={() => setShowVideoPreview(!showVideoPreview)}
-                  className={`gap-1.5 h-8 text-xs ${
-                    showVideoPreview ? "bg-white/[0.08] text-white border-white/[0.2]" : "text-slate-300"
-                  }`}
+                  className={`gap-1.5 h-8 text-xs ${showVideoPreview ? "bg-white/[0.08] text-white border-white/[0.2]" : "text-slate-300"
+                    }`}
                   title="Toggle Synchronized Video Preview"
                 >
                   <Film className="h-3.5 w-3.5" />
@@ -457,6 +460,8 @@ export default function TranslateWorkspace() {
                   onUpdateCue={handleUpdateCue}
                   onRetranslateCue={handleRetranslateSingleCue}
                   onSeekToCue={handleSeekToCue}
+                  targetLang={settings.targetLang}
+                  sourceLang={settings.sourceLang}
                 />
               </div>
             </div>

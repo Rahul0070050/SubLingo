@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
+import { TransliteratedTextarea } from "@/components/studio/TransliteratedTextarea";
+import { getTransliterationConfig } from "@/lib/transliteration/languages";
 
 interface SubtitleEditorProps {
   cues: SubtitleCue[];
@@ -25,6 +27,8 @@ interface SubtitleEditorProps {
   onUpdateCue: (cueId: number, translatedText: string) => void;
   onRetranslateCue?: (cueId: number) => void;
   onSeekToCue?: (startSeconds: number, cueId: number) => void;
+  targetLang?: string;
+  sourceLang?: string;
 }
 
 export function SubtitleEditor({
@@ -33,12 +37,15 @@ export function SubtitleEditor({
   onUpdateCue,
   onRetranslateCue,
   onSeekToCue,
+  targetLang = "ml",
+  sourceLang,
 }: SubtitleEditorProps) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [filterMode, setFilterMode] = React.useState<"all" | "completed" | "pending" | "error">("all");
   const [copiedId, setCopiedId] = React.useState<number | null>(null);
 
   const activeCueRef = React.useRef<HTMLDivElement | null>(null);
+  const langConfig = React.useMemo(() => getTransliterationConfig(targetLang), [targetLang]);
 
   // Auto-scroll to active cue if selected
   React.useEffect(() => {
@@ -114,42 +121,38 @@ export function SubtitleEditor({
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
           <button
             onClick={() => setFilterMode("all")}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-              filterMode === "all"
-                ? "bg-blue-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
-            }`}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filterMode === "all"
+              ? "bg-blue-600 text-white"
+              : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
+              }`}
           >
             All ({cues.length})
           </button>
           <button
             onClick={() => setFilterMode("completed")}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-              filterMode === "completed"
-                ? "bg-emerald-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
-            }`}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filterMode === "completed"
+              ? "bg-emerald-600 text-white"
+              : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
+              }`}
           >
             Translated ({cues.filter((c) => c.translatedText && c.status === "completed").length})
           </button>
           <button
             onClick={() => setFilterMode("pending")}
-            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-              filterMode === "pending"
-                ? "bg-amber-600 text-white"
-                : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
-            }`}
+            className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filterMode === "pending"
+              ? "bg-amber-600 text-white"
+              : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
+              }`}
           >
             Pending ({cues.filter((c) => !c.translatedText || c.status !== "completed").length})
           </button>
           {cues.some((c) => c.status === "error") && (
             <button
               onClick={() => setFilterMode("error")}
-              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
-                filterMode === "error"
-                  ? "bg-red-600 text-white"
-                  : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
-              }`}
+              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filterMode === "error"
+                ? "bg-red-600 text-white"
+                : "text-slate-400 hover:text-white hover:bg-white/[0.04]"
+                }`}
             >
               Errors ({cues.filter((c) => c.status === "error").length})
             </button>
@@ -174,11 +177,10 @@ export function SubtitleEditor({
               <div
                 key={cue.id}
                 ref={isActive ? activeCueRef : null}
-                className={`group rounded-lg border transition-colors p-3.5 ${
-                  isActive
-                    ? "border-blue-500/60 bg-blue-500/[0.03] ring-1 ring-blue-500/20"
-                    : "border-white/[0.08] bg-[#12151b] hover:border-white/[0.14]"
-                }`}
+                className={`group rounded-lg border transition-colors p-3.5 ${isActive
+                  ? "border-blue-500/60 bg-blue-500/[0.03] ring-1 ring-blue-500/20"
+                  : "border-white/[0.08] bg-[#12151b] hover:border-white/[0.14]"
+                  }`}
               >
                 {/* Cue Metadata Bar */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 mb-2.5 border-b border-white/[0.06] text-xs">
@@ -248,7 +250,23 @@ export function SubtitleEditor({
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-[11px] text-slate-400 font-medium">
                       <span>Original Segment</span>
-                      <span>{cue.originalText.length} chars</span>
+                      <div className="flex items-center gap-2">
+                        <span>{cue.originalText.length} chars</span>
+                        {cue.originalText && (
+                          <button
+                            type="button"
+                            onClick={() => handleCopyText(cue.id, cue.originalText)}
+                            className="text-slate-400 hover:text-white transition-colors"
+                            title="Copy translation"
+                          >
+                            {copiedId === cue.id ? (
+                              <Check className="h-3 w-3 text-emerald-400" />
+                            ) : (
+                              <Copy className="h-3 w-3" />
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <div className="rounded-md border border-white/[0.06] bg-[#161a22] p-2.5 text-xs text-slate-200 font-normal leading-relaxed min-h-[64px] select-text">
                       {cue.originalText}
@@ -278,18 +296,13 @@ export function SubtitleEditor({
                       </div>
                     </div>
 
-                    <div className="relative">
-                      <textarea
-                        value={cue.translatedText || ""}
-                        placeholder="Click to enter or edit translation..."
-                        onChange={(e) => onUpdateCue(cue.id, e.target.value)}
-                        rows={2}
-                        className="w-full rounded-md border border-white/[0.08] bg-[#161a22] p-2.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 leading-relaxed resize-y transition-colors"
-                      />
-
-                      {/* Quick single re-translate */}
-                      {onRetranslateCue && (
-                        <div className="absolute right-2 bottom-2.5 flex items-center gap-1">
+                    <TransliteratedTextarea
+                      value={cue.translatedText || ""}
+                      onChange={(val) => onUpdateCue(cue.id, val)}
+                      targetLang={targetLang}
+                      cueId={cue.id}
+                      rightAction={
+                        onRetranslateCue ? (
                           <button
                             type="button"
                             onClick={() => onRetranslateCue(cue.id)}
@@ -298,9 +311,9 @@ export function SubtitleEditor({
                           >
                             <RotateCcw className="h-3 w-3" />
                           </button>
-                        </div>
-                      )}
-                    </div>
+                        ) : undefined
+                      }
+                    />
                   </div>
                 </div>
 
