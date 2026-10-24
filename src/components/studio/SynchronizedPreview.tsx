@@ -51,6 +51,24 @@ export function SynchronizedPreview({
   const [subtitlePosition, setSubtitlePosition] = React.useState<"bottom" | "top">("bottom");
   const [subtitleDelayMs, setSubtitleDelayMs] = React.useState<number>(0);
 
+  // Multi-click skip accumulation state and ref
+  const [skipFeedback, setSkipFeedback] = React.useState<{
+    seconds: number;
+    direction: "forward" | "backward";
+  } | null>(null);
+
+  const skipAccumulatorRef = React.useRef<{
+    baseTime: number | null;
+    accumulatedSeconds: number;
+    timer: NodeJS.Timeout | null;
+  }>({
+    baseTime: null,
+    accumulatedSeconds: 0,
+    timer: null,
+  });
+
+  const skipSecondsRef = React.useRef<(seconds: number) => void>(() => {});
+
   const videoRef = React.useRef<HTMLVideoElement | null>(null);
   const containerRef = React.useRef<HTMLDivElement | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
@@ -78,7 +96,16 @@ export function SynchronizedPreview({
     }
   }, [seekTimeSeconds]);
 
-  // Keyboard shortcuts for subtitle delay sync: [ for -100ms and ] for +100ms
+  // Cleanup skip accumulator timer on unmount
+  React.useEffect(() => {
+    return () => {
+      if (skipAccumulatorRef.current.timer) {
+        clearTimeout(skipAccumulatorRef.current.timer);
+      }
+    };
+  }, []);
+
+  // Keyboard shortcuts for subtitle delay sync: [ for -100ms and ] for +100ms, and ArrowLeft/ArrowRight to skip
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
@@ -90,6 +117,12 @@ export function SynchronizedPreview({
       } else if (e.key === "]") {
         e.preventDefault();
         setSubtitleDelayMs((d) => d + 100);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        skipSecondsRef.current(-3);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        skipSecondsRef.current(3);
       }
     };
 
@@ -211,7 +244,18 @@ export function SynchronizedPreview({
     setIsPlaying(!isPlaying);
   };
 
+  const resetSkipAccumulator = () => {
+    if (skipAccumulatorRef.current.timer) {
+      clearTimeout(skipAccumulatorRef.current.timer);
+      skipAccumulatorRef.current.timer = null;
+    }
+    skipAccumulatorRef.current.baseTime = null;
+    skipAccumulatorRef.current.accumulatedSeconds = 0;
+    setSkipFeedback(null);
+  };
+
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    resetSkipAccumulator();
     const newTime = parseFloat(e.target.value);
     setCurrentTime(newTime);
     if (videoRef.current) {
@@ -219,13 +263,57 @@ export function SynchronizedPreview({
     }
   };
 
+  /**
+   * Skip forward/backward.
+   * If clicked multiple times rapidly, accumulates the seconds (e.g. +3s, +6s, +9s)
+   * and skips the total combined seconds.
+   */
   const skipSeconds = (seconds: number) => {
-    const next = Math.max(0, Math.min(duration, currentTime + seconds));
-    setCurrentTime(next);
-    if (videoRef.current) {
-      videoRef.current.currentTime = next;
+    const acc = skipAccumulatorRef.current;
+
+    // Clear previous settlement timer so rapid clicks accumulate together
+    if (acc.timer) {
+      clearTimeout(acc.timer);
+      acc.timer = null;
     }
+
+    // On the first click of a rapid burst, lock the starting playback position
+    if (acc.baseTime === null) {
+      acc.baseTime = videoRef.current ? videoRef.current.currentTime : currentTime;
+      acc.accumulatedSeconds = 0;
+    }
+
+    // Add clicked seconds to total accumulated skip offset
+    acc.accumulatedSeconds += seconds;
+
+    const totalDuration = duration || maxCueDuration || 30;
+    const target = Math.max(0, Math.min(totalDuration, acc.baseTime + acc.accumulatedSeconds));
+
+    // Immediately update UI slider, timecode, and video element
+    setCurrentTime(target);
+    if (videoRef.current) {
+      videoRef.current.currentTime = target;
+    }
+
+    // Show visual indicator with the total accumulated seconds
+    const direction = acc.accumulatedSeconds >= 0 ? "forward" : "backward";
+    setSkipFeedback({
+      seconds: Math.abs(acc.accumulatedSeconds),
+      direction,
+    });
+
+    // Settle 750ms after the last click in the rapid burst
+    acc.timer = setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.currentTime = target;
+      }
+      acc.baseTime = null;
+      acc.accumulatedSeconds = 0;
+      acc.timer = null;
+      setSkipFeedback(null);
+    }, 750);
   };
+  skipSecondsRef.current = skipSeconds;
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
@@ -437,6 +525,29 @@ export function SynchronizedPreview({
           </div>
         )}
 
+        {/* Rapid Multi-Click Skip Accumulation Feedback Overlay */}
+        {skipFeedback && (
+          <div
+            className={`absolute z-30 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none transition-all duration-150 animate-in fade-in zoom-in-90 ${
+              skipFeedback.direction === "forward" ? "right-6 sm:right-12" : "left-6 sm:left-12"
+            }`}
+          >
+            <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-black/85 backdrop-blur-md border border-indigo-500/50 text-white shadow-2xl shadow-indigo-500/30">
+              {skipFeedback.direction === "backward" && (
+                <Rewind className="h-4 w-4 text-indigo-400 animate-pulse" />
+              )}
+              <span className="font-mono font-bold text-xs sm:text-sm text-indigo-200">
+                {skipFeedback.direction === "forward"
+                  ? `+${skipFeedback.seconds}s`
+                  : `-${skipFeedback.seconds}s`}
+              </span>
+              {skipFeedback.direction === "forward" && (
+                <FastForward className="h-4 w-4 text-indigo-400 animate-pulse" />
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Live Cinema Subtitle Overlay (Netflix/Theater grade) */}
         {activeCue && (
           <div
@@ -513,7 +624,7 @@ export function SynchronizedPreview({
               size="icon"
               onClick={() => skipSeconds(-3)}
               className="h-8 w-8 text-slate-400 hover:text-white"
-              title="Skip back 3s"
+              title="Skip back 3s (click repeatedly to add more seconds)"
             >
               <Rewind className="h-4 w-4" />
             </Button>
@@ -523,7 +634,7 @@ export function SynchronizedPreview({
               size="icon"
               onClick={() => skipSeconds(3)}
               className="h-8 w-8 text-slate-400 hover:text-white"
-              title="Skip forward 3s"
+              title="Skip forward 3s (click repeatedly to add more seconds)"
             >
               <FastForward className="h-4 w-4" />
             </Button>
@@ -532,6 +643,7 @@ export function SynchronizedPreview({
               variant="ghost"
               size="icon"
               onClick={() => {
+                resetSkipAccumulator();
                 setCurrentTime(0);
                 if (videoRef.current) videoRef.current.currentTime = 0;
               }}
