@@ -48,15 +48,74 @@ function persistStoreToFile() {
 // Initial file load for fallback
 loadStoreFromFile();
 
+// Common trusted email providers usable on the website
+export const COMMON_TRUSTED_EMAIL_DOMAINS = new Set([
+  // Google
+  "gmail.com",
+  "googlemail.com",
+  // Microsoft
+  "outlook.com",
+  "hotmail.com",
+  "live.com",
+  "msn.com",
+  // Yahoo
+  "yahoo.com",
+  "ymail.com",
+  // Apple
+  "icloud.com",
+  "me.com",
+  "mac.com",
+  // Proton
+  "proton.me",
+  "protonmail.com",
+  // Zoho & AOL
+  "zoho.com",
+  "aol.com",
+]);
+
 export function normalizeEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-export function isValidGmail(email: string): boolean {
+/**
+ * Validates that an email is from a common trusted provider
+ * Automatically rejects all temporary, disposable, and unverified domains
+ */
+export function isValidCommonEmail(email: string): boolean {
   const normalized = normalizeEmail(email);
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(normalized)) return false;
-  return normalized.endsWith("@gmail.com") || normalized.includes("@");
+
+  const domain = normalized.split("@")[1];
+  return !!domain && COMMON_TRUSTED_EMAIL_DOMAINS.has(domain);
+}
+
+// Alias for compatibility
+export const isValidGmail = isValidCommonEmail;
+
+/**
+ * Validates email input with clear user feedback
+ */
+export function validateEmailInput(email: string): { valid: boolean; message?: string } {
+  const normalized = normalizeEmail(email);
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!email || !emailRegex.test(normalized)) {
+    return {
+      valid: false,
+      message: "Please enter a valid email format.",
+    };
+  }
+
+  const domain = normalized.split("@")[1];
+  if (!domain || !COMMON_TRUSTED_EMAIL_DOMAINS.has(domain)) {
+    return {
+      valid: false,
+      message: "Please use a common email provider (e.g. Gmail, Outlook, Yahoo, iCloud, Proton, Zoho). Temporary and disposable emails are strictly blocked.",
+    };
+  }
+
+  return { valid: true };
 }
 
 export function generateOtp(): string {
@@ -73,7 +132,7 @@ export function generateMasterPasskey(): string {
 }
 
 /**
- * Issues an OTP for a Gmail address and sends via Resend email service
+ * Issues an OTP for a common trusted email address and sends via Resend email service
  */
 export async function issueOtp(email: string): Promise<{
   success: boolean;
@@ -83,10 +142,11 @@ export async function issueOtp(email: string): Promise<{
   emailSent?: boolean;
 }> {
   const cleanEmail = normalizeEmail(email);
-  if (!isValidGmail(cleanEmail)) {
+  const validation = validateEmailInput(cleanEmail);
+  if (!validation.valid) {
     return {
       success: false,
-      message: "Please enter a valid Gmail address (e.g. yourname@gmail.com).",
+      message: validation.message || "Please enter a valid common email address (e.g. yourname@gmail.com).",
     };
   }
 
@@ -333,7 +393,7 @@ export async function validateMasterPasskey(passkeyInput: string): Promise<{
   if (!record) {
     return {
       valid: false,
-      message: "Invalid master passkey. Please check your key or verify with a new Gmail OTP.",
+      message: "Invalid master passkey. Please check your key or verify with a new email OTP.",
     };
   }
 
@@ -345,7 +405,7 @@ export async function validateMasterPasskey(passkeyInput: string): Promise<{
     return {
       valid: false,
       expired: true,
-      message: "This master passkey has expired after 24 hours. Please verify with a new Gmail OTP.",
+      message: "This master passkey has expired after 24 hours. Please verify with a new email OTP.",
     };
   }
 

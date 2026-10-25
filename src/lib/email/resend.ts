@@ -170,7 +170,19 @@ export async function sendOtpEmail({
     });
 
     if (error) {
-      console.error("Resend API error:", error);
+      console.error("[RESEND API ERROR]:", error.message);
+
+      const isSandboxRestriction =
+        error.message?.toLowerCase().includes("only send testing emails") ||
+        error.message?.toLowerCase().includes("resend.com/domains");
+
+      if (isSandboxRestriction) {
+        console.warn(
+          `\n⚠️ [RESEND SANDBOX NOTICE]: 'onboarding@resend.dev' is a testing domain and can ONLY send emails to the address you signed up with on Resend.` +
+          `\n👉 For PUBLIC users (like ${to}), you must add & verify your own domain at https://resend.com/domains and set RESEND_FROM_EMAIL in .env.local.\n`
+        );
+      }
+
       return {
         success: false,
         error: error.message,

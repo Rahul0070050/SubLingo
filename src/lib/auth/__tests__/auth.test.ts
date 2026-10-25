@@ -4,6 +4,8 @@ import {
   verifyOtpAndCreatePasskey,
   validateMasterPasskey,
   isValidGmail,
+  isValidCommonEmail,
+  validateEmailInput,
   generateMasterPasskey,
   normalizeEmail,
 } from "../store";
@@ -11,11 +13,40 @@ import {
 describe("Passwordless Authentication & Master Passkey System", () => {
   const testEmail = "developer.test@gmail.com";
 
-  it("validates Gmail addresses correctly", () => {
-    expect(isValidGmail("test@gmail.com")).toBe(true);
-    expect(isValidGmail("user.name+tag@gmail.com")).toBe(true);
-    expect(isValidGmail("invalid-email")).toBe(false);
-    expect(isValidGmail("")).toBe(false);
+  it("validates common trusted email providers and rejects temporary/disposable emails", () => {
+    // Valid common email providers
+    expect(isValidCommonEmail("test@gmail.com")).toBe(true);
+    expect(isValidCommonEmail("user.name+tag@gmail.com")).toBe(true);
+    expect(isValidCommonEmail("user@googlemail.com")).toBe(true);
+    expect(isValidCommonEmail("someone@outlook.com")).toBe(true);
+    expect(isValidCommonEmail("someone@hotmail.com")).toBe(true);
+    expect(isValidCommonEmail("someone@live.com")).toBe(true);
+    expect(isValidCommonEmail("someone@msn.com")).toBe(true);
+    expect(isValidCommonEmail("someone@yahoo.com")).toBe(true);
+    expect(isValidCommonEmail("user@icloud.com")).toBe(true);
+    expect(isValidCommonEmail("user@me.com")).toBe(true);
+    expect(isValidCommonEmail("user@proton.me")).toBe(true);
+    expect(isValidCommonEmail("user@protonmail.com")).toBe(true);
+    expect(isValidCommonEmail("user@zoho.com")).toBe(true);
+    expect(isValidCommonEmail("user@aol.com")).toBe(true);
+
+    // Invalid email syntax
+    expect(isValidCommonEmail("invalid-email")).toBe(false);
+    expect(isValidCommonEmail("")).toBe(false);
+
+    // Rejected temporary / disposable / unknown domains
+    expect(isValidCommonEmail("fake@tempmail.com")).toBe(false);
+    expect(isValidCommonEmail("trash@mailinator.com")).toBe(false);
+    expect(isValidCommonEmail("test@10minutemail.com")).toBe(false);
+    expect(isValidCommonEmail("random@yopmail.com")).toBe(false);
+    expect(isValidCommonEmail("user@guerrillamail.com")).toBe(false);
+    expect(isValidCommonEmail("burner@dispostable.com")).toBe(false);
+    expect(isValidCommonEmail("user@throwaway.xyz")).toBe(false);
+
+    // validateEmailInput helper feedback
+    expect(validateEmailInput("test@gmail.com").valid).toBe(true);
+    expect(validateEmailInput("spammer@tempmail.com").valid).toBe(false);
+    expect(validateEmailInput("spammer@tempmail.com").message).toContain("Please use a common email provider");
   });
 
   it("generates a unique master passkey with the proper format", () => {

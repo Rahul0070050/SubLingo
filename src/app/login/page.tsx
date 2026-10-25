@@ -67,7 +67,7 @@ export default function LoginPage() {
 
     const cleanEmail = email.trim().toLowerCase();
     if (!cleanEmail || !cleanEmail.includes("@")) {
-      setErrorMessage("Please enter a valid Gmail address.");
+      setErrorMessage("Please enter a valid email address.");
       return;
     }
 
@@ -102,7 +102,7 @@ export default function LoginPage() {
     if (res.success && res.passkey) {
       setGeneratedPasskey(res.passkey);
       setOtpStep("passkey-issued");
-      setSuccessMessage("Gmail verified! Your 24-hour master passkey is ready.");
+      setSuccessMessage("Email verified! Your 24-hour master passkey is ready.");
 
       // Confetti celebration
       try {
@@ -139,7 +139,7 @@ export default function LoginPage() {
     } else {
       if (res.expired) {
         setErrorMessage(
-          "This master passkey expired after 24 hours. Please verify with a new Gmail OTP."
+          "This master passkey expired after 24 hours. Please verify with a new email OTP."
         );
       } else {
         setErrorMessage(
@@ -180,7 +180,7 @@ export default function LoginPage() {
                 Passwordless Access
               </h1>
               <p className="text-xs text-slate-400 max-w-xs mx-auto">
-                No passwords or signups. Verify your Gmail to receive a 24-hour master passkey.
+                No passwords or signups. Verify your email to receive a 24-hour master passkey.
               </p>
             </div>
 
@@ -199,7 +199,7 @@ export default function LoginPage() {
                       : "text-slate-400 hover:text-white"
                   }`}
                 >
-                  Gmail OTP
+                  Email OTP
                 </button>
                 <button
                   type="button"
@@ -234,14 +234,14 @@ export default function LoginPage() {
                       }}
                       className="block mt-1.5 font-medium text-blue-400 hover:underline"
                     >
-                      Verify Gmail for a new passkey ➔
+                      Verify email for a new passkey ➔
                     </button>
                   )}
                 </div>
               </div>
             )}
 
-            {/* TAB 1: GMAIL OTP FLOW */}
+            {/* TAB 1: EMAIL OTP FLOW */}
             {activeTab === "otp" && (
               <div>
                 {/* Step 1: Email Input */}
@@ -249,8 +249,8 @@ export default function LoginPage() {
                   <form onSubmit={handleSendOtp} className="space-y-4">
                     <div className="space-y-1.5">
                       <label className="text-xs font-medium text-slate-300 flex items-center justify-between">
-                        <span>Your Gmail Address</span>
-                        <span className="text-[10px] text-slate-500">Requires verification</span>
+                        <span>Your Email Address</span>
+                        <span className="text-[10px] text-slate-400">Gmail, Outlook, Yahoo, iCloud</span>
                       </label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -285,7 +285,7 @@ export default function LoginPage() {
                     </Button>
 
                     <div className="text-[11px] text-slate-400 text-center pt-1">
-                      A unique 6-digit OTP will be issued to your Gmail. Valid for 10 minutes.
+                      A unique 6-digit OTP will be issued to your email. Valid for 10 minutes.
                     </div>
                   </form>
                 )}
@@ -506,7 +506,7 @@ export default function LoginPage() {
                     }}
                     className="text-blue-400 hover:underline font-medium"
                   >
-                    Verify Gmail to get a new 24h passkey ➔
+                    Verify email to get a new 24h passkey ➔
                   </button>
                 </div>
               </form>

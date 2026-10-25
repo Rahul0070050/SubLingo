@@ -90,6 +90,7 @@ export function Header({ onOpenSettings, activeProvider = "Free Engine" }: Heade
             <Layers className="h-3.5 w-3.5" />
             <span>Editor</span>
           </Link>
+          {/* add here published subtitles lists */}
         </nav>
 
         {/* Action controls */}

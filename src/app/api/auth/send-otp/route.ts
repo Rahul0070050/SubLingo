@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
 
     if (!email || typeof email !== "string") {
       return NextResponse.json(
-        { success: false, message: "Please provide a valid Gmail address." },
+        { success: false, message: "Please provide a valid email address." },
         { status: 400 }
       );
     }
