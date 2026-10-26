@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -54,6 +55,8 @@ export function PublishModal({
   const [isPublishing, setIsPublishing] = React.useState(false);
   const [isPublished, setIsPublished] = React.useState(false);
   const [publishedUrl, setPublishedUrl] = React.useState("");
+  const [publishedId, setPublishedId] = React.useState("");
+  const [publishError, setPublishError] = React.useState<string | null>(null);
   const [copied, setCopied] = React.useState(false);
 
   // Initialize release title when modal opens
@@ -61,6 +64,7 @@ export function PublishModal({
     if (isOpen) {
       setIsPublished(false);
       setIsPublishing(false);
+      setPublishError(null);
       const defaultName = subtitleFile?.filename
         ? subtitleFile.filename.replace(/\.(srt|vtt)$/i, "")
         : "Untitled Subtitles";
@@ -106,29 +110,55 @@ export function PublishModal({
 
   const handlePublish = async () => {
     setIsPublishing(true);
+    setPublishError(null);
 
-    // Simulate publishing upload & generation
-    await new Promise((resolve) => setTimeout(resolve, 1200));
-
-    // Generate unique published link ID
-    const randomId = Math.random().toString(36).substring(2, 9);
-    const origin = typeof window !== "undefined" ? window.location.origin : "https://sublingo.studio";
-    const shareUrl = `${origin}/subtitles/${randomId}`;
-
-    setPublishedUrl(shareUrl);
-    setIsPublishing(false);
-    setIsPublished(true);
-
-    // Confetti celebration
     try {
-      confetti({
-        particleCount: 90,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b"],
+      const response = await fetch("/api/subtitles/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: releaseTitle.trim(),
+          description: description.trim(),
+          filename: subtitleFile?.filename || "subtitles.srt",
+          format: subtitleFile?.format || "srt",
+          sourceLang,
+          targetLang,
+          visibility,
+          cues,
+          cuesCount: stats.totalCues,
+          translatedCuesCount: stats.translatedCues,
+          durationFormatted: stats.durationFormatted,
+          durationSeconds: cues[cues.length - 1]?.endSeconds || 0,
+        }),
       });
-    } catch {
-      // Ignore in environments without canvas
+
+      const resData = await response.json();
+      if (!response.ok || !resData.success) {
+        throw new Error(resData.error || "Failed to publish subtitles");
+      }
+
+      const id = resData.id;
+      setPublishedId(id);
+      const origin = typeof window !== "undefined" ? window.location.origin : "https://sublingo.studio";
+      setPublishedUrl(`${origin}/subtitles/${id}`);
+      setIsPublished(true);
+
+      // Confetti celebration
+      try {
+        confetti({
+          particleCount: 90,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b"],
+        });
+      } catch {
+        // Ignore in environments without canvas
+      }
+    } catch (err: unknown) {
+      console.error("Publish error:", err);
+      setPublishError(err instanceof Error ? err.message : "Failed to publish subtitles");
+    } finally {
+      setIsPublishing(false);
     }
   };
 
@@ -226,10 +256,29 @@ export function PublishModal({
           </div>
 
           {/* Footer Action */}
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
-            <Button variant="outline" size="sm" onClick={onClose} className="h-8 text-xs">
-              Done
-            </Button>
+          <div className="flex items-center justify-between gap-2 pt-2 border-t border-white/10">
+            <Link
+              href="/subtitles"
+              onClick={onClose}
+              className="text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1.5 transition-colors"
+            >
+              <Globe className="h-3.5 w-3.5" />
+              <span>Browse Subtitles Library</span>
+            </Link>
+
+            <div className="flex items-center gap-2">
+              {publishedId && (
+                <Link href={`/subtitles/${publishedId}`} onClick={onClose}>
+                  <Button size="sm" className="h-8 text-xs gap-1.5 bg-blue-600 hover:bg-blue-500">
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    <span>View Release</span>
+                  </Button>
+                </Link>
+              )}
+              <Button variant="outline" size="sm" onClick={onClose} className="h-8 text-xs border-white/10">
+                Done
+              </Button>
+            </div>
           </div>
         </div>
       ) : (
@@ -401,6 +450,14 @@ export function PublishModal({
               <span>
                 {stats.totalCues - stats.translatedCues} cues are still pending translation. You can still publish, or complete them in the editor.
               </span>
+            </div>
+          )}
+
+          {/* Error notice if publish failed */}
+          {publishError && (
+            <div className="p-2.5 rounded-lg bg-red-500/10 border border-red-500/30 text-xs text-red-300 flex items-center gap-2">
+              <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
+              <span>{publishError}</span>
             </div>
           )}
 

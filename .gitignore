@@ -41,5 +41,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# auth data store
+# auth & subtitle local data stores
 .auth_store.json
+.published_subtitles.json

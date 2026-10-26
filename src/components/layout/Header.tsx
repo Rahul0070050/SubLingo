@@ -8,6 +8,7 @@ import {
   Settings,
   Subtitles,
   Layers,
+  Film,
   KeyRound,
   Copy,
   Check,
@@ -90,7 +91,16 @@ export function Header({ onOpenSettings, activeProvider = "Free Engine" }: Heade
             <Layers className="h-3.5 w-3.5" />
             <span>Editor</span>
           </Link>
-          {/* add here published subtitles lists */}
+          <Link
+            href="/subtitles"
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium transition-colors ${pathname.startsWith("/subtitles")
+              ? "bg-blue-600 text-white"
+              : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+              }`}
+          >
+            <Film className="h-3.5 w-3.5" />
+            <span>Subtitles</span>
+          </Link>
         </nav>
 
         {/* Action controls */}
