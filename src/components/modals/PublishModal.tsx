@@ -58,6 +58,7 @@ export function PublishModal({
   const [publishedId, setPublishedId] = React.useState("");
   const [publishError, setPublishError] = React.useState<string | null>(null);
   const [copied, setCopied] = React.useState(false);
+  const [b2Stored, setB2Stored] = React.useState<boolean>(false);
 
   // Initialize release title when modal opens
   React.useEffect(() => {
@@ -139,6 +140,7 @@ export function PublishModal({
 
       const id = resData.id;
       setPublishedId(id);
+      setB2Stored(Boolean(resData.b2?.stored));
       const origin = typeof window !== "undefined" ? window.location.origin : "https://sublingo.studio";
       setPublishedUrl(`${origin}/subtitles/${id}`);
       setIsPublished(true);
@@ -197,6 +199,12 @@ export function PublishModal({
               "{releaseTitle}" has been packaged with {stats.translatedCues} synchronized cues in{" "}
               {stats.targetConfig.name}.
             </p>
+            {b2Stored && (
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[11px] font-medium text-cyan-400">
+                <UploadCloud className="h-3 w-3" />
+                <span>Archived to Backblaze B2 Cloud Storage</span>
+              </div>
+            )}
           </div>
 
           {/* Shareable Link Box */}

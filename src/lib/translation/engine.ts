@@ -100,7 +100,7 @@ export async function translateWithGemini(
     throw new Error("Gemini API key is required. Please provide it in settings or set GEMINI_API_KEY.");
   }
 
-  const model = settings.model || "gemini-1.5-flash";
+  const model = settings.model || "gemini-2.0-flash";
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
   const simplifiedCues = cues.map((c) => ({

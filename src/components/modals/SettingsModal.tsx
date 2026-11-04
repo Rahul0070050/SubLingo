@@ -63,22 +63,20 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
       <div className="flex border-b border-white/10 mb-6 gap-2">
         <button
           onClick={() => setActiveTab("provider")}
-          className={`flex items-center gap-2 pb-3 px-3 text-xs font-semibold border-b-2 transition-all ${
-            activeTab === "provider"
-              ? "border-indigo-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
+          className={`flex items-center gap-2 pb-3 px-3 text-xs font-semibold border-b-2 transition-all ${activeTab === "provider"
+            ? "border-indigo-500 text-white"
+            : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
         >
           <Sparkles className="h-4 w-4" />
           Translation Engine
         </button>
         <button
           onClick={() => setActiveTab("glossary")}
-          className={`flex items-center gap-2 pb-3 px-3 text-xs font-semibold border-b-2 transition-all ${
-            activeTab === "glossary"
-              ? "border-indigo-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
+          className={`flex items-center gap-2 pb-3 px-3 text-xs font-semibold border-b-2 transition-all ${activeTab === "glossary"
+            ? "border-indigo-500 text-white"
+            : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
         >
           <BookOpen className="h-4 w-4" />
           Terminology Glossary
@@ -90,11 +88,10 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
         </button>
         <button
           onClick={() => setActiveTab("advanced")}
-          className={`flex items-center gap-2 pb-3 px-3 text-xs font-semibold border-b-2 transition-all ${
-            activeTab === "advanced"
-              ? "border-indigo-500 text-white"
-              : "border-transparent text-slate-400 hover:text-slate-200"
-          }`}
+          className={`flex items-center gap-2 pb-3 px-3 text-xs font-semibold border-b-2 transition-all ${activeTab === "advanced"
+            ? "border-indigo-500 text-white"
+            : "border-transparent text-slate-400 hover:text-slate-200"
+            }`}
         >
           <Sliders className="h-4 w-4" />
           Tone & Batches
@@ -108,11 +105,10 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
             {/* Free Web Engine */}
             <div
               onClick={() => setLocalSettings((p) => ({ ...p, provider: "free-engine" }))}
-              className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                localSettings.provider === "free-engine"
-                  ? "bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500/50"
-                  : "bg-white/[0.02] border-white/10 hover:border-white/20"
-              }`}
+              className={`p-4 rounded-xl border cursor-pointer transition-all ${localSettings.provider === "free-engine"
+                ? "bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500/50"
+                : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-white">Free Engine</span>
@@ -126,11 +122,10 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
             {/* Google Gemini */}
             <div
               onClick={() => setLocalSettings((p) => ({ ...p, provider: "gemini" }))}
-              className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                localSettings.provider === "gemini"
-                  ? "bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500/50"
-                  : "bg-white/[0.02] border-white/10 hover:border-white/20"
-              }`}
+              className={`p-4 rounded-xl border cursor-pointer transition-all ${localSettings.provider === "gemini"
+                ? "bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500/50"
+                : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-white">Google Gemini</span>
@@ -144,11 +139,10 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
             {/* OpenAI */}
             <div
               onClick={() => setLocalSettings((p) => ({ ...p, provider: "openai" }))}
-              className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                localSettings.provider === "openai"
-                  ? "bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500/50"
-                  : "bg-white/[0.02] border-white/10 hover:border-white/20"
-              }`}
+              className={`p-4 rounded-xl border cursor-pointer transition-all ${localSettings.provider === "openai"
+                ? "bg-indigo-600/20 border-indigo-500 ring-1 ring-indigo-500/50"
+                : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                }`}
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-bold text-white">OpenAI</span>
@@ -189,13 +183,13 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
                 <div className="pt-2">
                   <label className="text-xs text-slate-300 block mb-1">Model Selection</label>
                   <select
-                    value={localSettings.model || "gemini-1.5-flash"}
+                    value={localSettings.model || "gemini-2.5-flash"}
                     onChange={(e) => setLocalSettings((p) => ({ ...p, model: e.target.value }))}
                     className="w-full bg-slate-800/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
                   >
-                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Ultra fast & recommended)</option>
-                    <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
-                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Deep contextual dialogue)</option>
+                    <option value="gemini-2.5-flash">Gemini 2.5 Flash (Fast & recommended)</option>
+                    <option value="gemini-flash-lite-latest">Gemini Flash-Lite (Ultra fast)</option>
+                    <option value="gemini-3.1-pro-preview">Gemini 3.1 Pro (Deep nuance & context)</option>
                   </select>
                 </div>
               )}
@@ -288,11 +282,10 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
                   key={t}
                   type="button"
                   onClick={() => setLocalSettings((p) => ({ ...p, tone: t }))}
-                  className={`p-2.5 rounded-xl border text-xs font-medium capitalize transition-all ${
-                    (localSettings.tone || "natural") === t
-                      ? "bg-indigo-600/25 border-indigo-500 text-white"
-                      : "bg-white/[0.02] border-white/10 text-slate-400 hover:text-white"
-                  }`}
+                  className={`p-2.5 rounded-xl border text-xs font-medium capitalize transition-all ${(localSettings.tone || "natural") === t
+                    ? "bg-indigo-600/25 border-indigo-500 text-white"
+                    : "bg-white/[0.02] border-white/10 text-slate-400 hover:text-white"
+                    }`}
                 >
                   {t}
                 </button>

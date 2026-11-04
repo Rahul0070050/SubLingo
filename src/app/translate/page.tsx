@@ -69,6 +69,7 @@ export default function TranslateWorkspace() {
     }
 
     const existingSubtitle = loadActiveSubtitle();
+    console.log("existingSubtitle", existingSubtitle);
     if (existingSubtitle && existingSubtitle.cues && existingSubtitle.cues.length > 0) {
       setSubtitleFile(existingSubtitle);
       setCues(existingSubtitle.cues);
@@ -230,6 +231,19 @@ export default function TranslateWorkspace() {
       setCues((prev) =>
         prev.map((c) => (c.id === cueId ? { ...c, status: "error", error: (err as Error).message } : c))
       );
+    }
+  };
+
+  // Delete cue
+  const handleDeleteCue = (id: number) => {
+    if (cues.length <= 1) {
+      alert("At least one subtitle cue must remain.");
+      return;
+    }
+    const updated = cues.filter((c) => c.id !== id).map((c, i) => ({ ...c, id: i + 1 }));
+    setCues(updated);
+    if (activeCueId === id) {
+      setActiveCueId(updated[0]?.id);
     }
   };
 
@@ -463,6 +477,7 @@ export default function TranslateWorkspace() {
                   onUpdateCue={handleUpdateCue}
                   onRetranslateCue={handleRetranslateSingleCue}
                   onSeekToCue={handleSeekToCue}
+                  onDeleteCue={handleDeleteCue}
                   targetLang={settings.targetLang}
                   sourceLang={settings.sourceLang}
                 />

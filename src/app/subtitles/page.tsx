@@ -530,6 +530,15 @@ export default function PublishedSubtitlesPage() {
                           <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.04] text-slate-400 font-medium border border-white/[0.04]">
                             {sub.category}
                           </span>
+                          {sub.b2Stored && (
+                            <span
+                              className="text-[10px] px-1.5 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 font-medium border border-cyan-500/20 inline-flex items-center gap-1"
+                              title="Stored in Backblaze B2 Object Storage"
+                            >
+                              <UploadCloud className="h-2.5 w-2.5" />
+                              <span>B2</span>
+                            </span>
+                          )}
                         </div>
 
                         {/* Views & Downloads Counters */}

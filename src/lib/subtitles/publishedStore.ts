@@ -24,6 +24,9 @@ export interface PublishedSubtitle {
   downloadsCount: number;
   viewsCount: number;
   tags: string[];
+  b2Key?: string;
+  b2Bucket?: string;
+  b2Stored?: boolean;
 }
 
 const STORE_FILE_PATH = path.join(process.cwd(), ".published_subtitles.json");
@@ -532,7 +535,7 @@ export async function getPublishedSubtitles(filters?: {
         }
       } else {
         // If MongoDB collection is empty, seed it with our initial set
-        await db.collection("published_subtitles").insertMany(SEED_SUBTITLES as any).catch(() => {});
+        await db.collection("published_subtitles").insertMany(SEED_SUBTITLES as any).catch(() => { });
       }
     }
   } catch (err) {

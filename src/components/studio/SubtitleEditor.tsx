@@ -15,6 +15,7 @@ import {
   ArrowRight,
   CheckCheck,
   RefreshCw,
+  Trash,
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
@@ -27,6 +28,7 @@ interface SubtitleEditorProps {
   onUpdateCue: (cueId: number, translatedText: string) => void;
   onRetranslateCue?: (cueId: number) => void;
   onSeekToCue?: (startSeconds: number, cueId: number) => void;
+  onDeleteCue?: (cueId: number) => void;
   targetLang?: string;
   sourceLang?: string;
 }
@@ -37,6 +39,7 @@ export function SubtitleEditor({
   onUpdateCue,
   onRetranslateCue,
   onSeekToCue,
+  onDeleteCue,
   targetLang = "ml",
   sourceLang,
 }: SubtitleEditorProps) {
@@ -206,7 +209,7 @@ export function SubtitleEditor({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1">
                     {/* Reading speed */}
                     {getCpsBadge(currentCps)}
 
@@ -241,6 +244,14 @@ export function SubtitleEditor({
                         <Play className="h-3 w-3" />
                       </button>
                     )}
+                    <button
+                      type="button"
+                      onClick={() => onDeleteCue && onDeleteCue(cue.id)}
+                      className="p-1 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition-colors"
+                      title="Delete cue"
+                    >
+                      <Trash className="h-3.5 w-3.5" />
+                    </button>
                   </div>
                 </div>
 

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { savePublishedSubtitle } from "@/lib/subtitles/publishedStore";
 import { SubtitleCue } from "@/lib/subtitles/types";
+import { serializeSubtitles } from "@/lib/subtitles/serializer";
+import { uploadSubtitleToB2, isB2Configured } from "@/lib/storage/b2";
 
 const PublishRequestSchema = z.object({
   id: z.string().optional(),
@@ -49,8 +51,53 @@ export async function POST(req: NextRequest) {
       data.translatedCuesCount ??
       cues.filter((c) => c.translatedText && c.translatedText.trim().length > 0).length;
 
+    const id = data.id || `sub_${Math.random().toString(36).substring(2, 9)}`;
+
+    // Prepare Backblaze B2 storage metadata
+    let b2Key: string | undefined;
+    let b2Bucket: string | undefined;
+    let b2Stored: boolean = false;
+
+    // Check if Backblaze B2 is configured
+    if (isB2Configured()) {
+      try {
+        const { content, mimeType, extension } = serializeSubtitles(cues, {
+          format: data.format,
+          mode: "translated",
+          normalizeLineBreaks: true,
+        });
+
+        // Safe filename for S3/B2 key
+        const safeBase = data.filename.replace(/\.(srt|vtt)$/i, "").replace(/[^a-zA-Z0-9._-]/g, "_");
+        const objectKey = `subtitles/${id}/${safeBase}.${extension}`;
+
+        const uploadResult = await uploadSubtitleToB2({
+          key: objectKey,
+          content,
+          contentType: mimeType,
+          metadata: {
+            title: encodeURIComponent(data.title.substring(0, 80)),
+            sourcelang: data.sourceLang,
+            targetlang: data.targetLang,
+            format: data.format,
+            cuescount: String(cuesCount),
+          },
+        });
+
+        if (uploadResult.success && uploadResult.key) {
+          b2Key = uploadResult.key;
+          b2Bucket = uploadResult.bucket;
+          b2Stored = true;
+        } else {
+          console.warn("[PUBLISH] Backblaze B2 upload did not succeed, fallback to database:", uploadResult.error);
+        }
+      } catch (b2Err) {
+        console.warn("[PUBLISH] B2 upload error during publish, continuing gracefully:", b2Err);
+      }
+    }
+
     const publishedItem = await savePublishedSubtitle({
-      id: data.id,
+      id,
       title: data.title.trim(),
       description: data.description?.trim() || "",
       filename: data.filename,
@@ -67,6 +114,9 @@ export async function POST(req: NextRequest) {
       category: data.category,
       cues,
       tags: data.tags || [data.category, data.targetLang],
+      b2Key,
+      b2Bucket,
+      b2Stored,
     });
 
     return NextResponse.json({
@@ -74,6 +124,12 @@ export async function POST(req: NextRequest) {
       id: publishedItem.id,
       url: `/subtitles/${publishedItem.id}`,
       subtitle: publishedItem,
+      b2: {
+        configured: isB2Configured(),
+        stored: b2Stored,
+        key: b2Key,
+        bucket: b2Bucket,
+      },
     });
   } catch (error: unknown) {
     console.error("Publish subtitle API error:", error);
@@ -81,3 +137,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }
+

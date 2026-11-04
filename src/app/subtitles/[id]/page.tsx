@@ -85,10 +85,33 @@ export default function SubtitleReleasePage() {
     router.push("/editor");
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!subtitle) return;
     setDownloading(true);
     try {
+      const response = await fetch(`/api/subtitles/published/${id}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mode: downloadMode, format: subtitle.format }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Server download failed");
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const baseName = subtitle.title.replace(/[^a-zA-Z0-9_-]/g, "_");
+      link.href = url;
+      link.download = `${baseName}_${subtitle.targetLang}_${downloadMode}.${subtitle.format}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.warn("Server streaming download failed, falling back to client-side serialization:", err);
+      // Fallback to client-side serialization
       const { content, mimeType, extension } = serializeSubtitles(subtitle.cues, {
         format: subtitle.format,
         mode: downloadMode,
@@ -105,8 +128,6 @@ export default function SubtitleReleasePage() {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error("Download failed:", err);
     } finally {
       setTimeout(() => setDownloading(false), 600);
     }
@@ -172,6 +193,12 @@ export default function SubtitleReleasePage() {
                       <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-white/[0.05] text-slate-300 font-medium">
                         {subtitle.category}
                       </span>
+                      {subtitle.b2Stored && (
+                        <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 font-medium inline-flex items-center gap-1">
+                          <UploadCloud className="h-3 w-3" />
+                          <span>Backblaze B2</span>
+                        </span>
+                      )}
                       <span className="text-[11px] text-slate-400">
                         Published by <span className="text-slate-200 font-medium">{subtitle.authorName}</span>
                       </span>

@@ -217,10 +217,18 @@ All API keys are completely optional for local development. Keys can also be add
 
 | Variable | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
+| `B2_ENDPOINT` | `string` | _Auto (s3.us-east-005.backblazeb2.com)_ | Backblaze B2 S3-compatible endpoint (e.g. `https://s3.us-east-005.backblazeb2.com`). |
+| `B2_REGION` | `string` | `us-east-005` | Backblaze B2 bucket region. |
+| `B2_KEY_ID` | `string` | _None_ | Backblaze Application Key ID (or Master Key ID). |
+| `B2_APPLICATION_KEY` | `string` | _None_ | Backblaze Application Key (Secret). |
+| `B2_BUCKET_NAME` | `string` | _None_ | Backblaze B2 private/public bucket name for subtitle storage. |
+| `MONGODB_URI` | `string` | _None_ | MongoDB connection string for metadata persistence. |
+| `RESEND_API_KEY` | `string` | _None_ | Resend API key for passwordless auth email verification. |
 | `GEMINI_API_KEY` | `string` | _None_ | Google Gemini API key. Enables Gemini 1.5/2.0 Flash models. |
 | `OPENAI_API_KEY` | `string` | _None_ | OpenAI API key. Enables GPT-4o and GPT-4o-mini translation. |
 | `DEEPL_API_KEY` | `string` | _None_ | DeepL API key (supports free `:fx` keys and DeepL Pro). |
 | `NEXT_PUBLIC_APP_URL` | `string` | `http://localhost:3000` | Application base URL used for absolute metadata resolution. |
+
 
 ---
 
