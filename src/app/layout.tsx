@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "SubLingo — Subtitle Translation Studio",
+  title: "Subtivio — Subtitle Translation Studio",
   description:
     "Translate SRT and WebVTT subtitle files into 50+ languages with zero timestamp drift, side-by-side editing, CPS reading speed checks, and synchronized video preview.",
   keywords: [
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "bilingual subtitles",
     "video localization",
   ],
-  authors: [{ name: "SubLingo" }],
+  authors: [{ name: "Subtivio Studio" }],
 };
 
 export const viewport = {

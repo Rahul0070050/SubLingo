@@ -3,7 +3,7 @@ import { revokePasskey } from "@/lib/auth/store";
 
 export async function POST(request: NextRequest) {
   try {
-    const passkey = request.cookies.get("sublingo_passkey")?.value;
+    const passkey = request.cookies.get("subtivio_passkey")?.value;
     if (passkey) {
       await revokePasskey(passkey);
     }
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       message: "Logged out successfully.",
     });
 
-    response.cookies.delete("sublingo_passkey");
+    response.cookies.delete("subtivio_passkey");
     return response;
   } catch (error) {
     console.error("Error logging out:", error);

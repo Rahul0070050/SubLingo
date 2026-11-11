@@ -1,6 +1,6 @@
 <div align="center">
 
-  <h1>SubLingo</h1>
+  <h1>Subtivio Studio</h1>
 
   <h3>AI Subtitle Translation & Frame-Accurate Timing Studio</h3>
 
@@ -29,7 +29,7 @@
 
   <br />
 
-  <img src="./public/screenshots/landing-page.png" alt="SubLingo Landing Page" width="920" style="max-width: 100%; border-radius: 16px; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.1);" />
+  <img src="./public/screenshots/landing-page.png" alt="Subtivio Studio Landing Page" width="920" style="max-width: 100%; border-radius: 16px; box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.1);" />
 
   <br /><br />
 
@@ -45,7 +45,7 @@ Subtitling is one of the most fragile steps in video post-production. Translatin
 2. **Excessive Reading Speed:** Translated dialogue in romance or Germanic languages often inflates character counts, causing subtitles to flash on screen faster than human viewers can read.
 3. **Lost Formatting Tags:** Crucial stylistic markers such as `<i>` (off-screen dialogue/voiceover), `<b>`, and WebVTT cue placement headers (`align:middle`, `line:0%`) are stripped or mangled.
 
-**SubLingo** is engineered specifically to eliminate these points of failure. By decoupling subtitle timestamp structures from translation payloads, SubLingo translates dialogue while locking timecodes to the exact millisecond. It pairs intelligent translation with a real-time synchronized video player, Characters-Per-Second (CPS) readability checking, a full cue timeline editor, and multi-format bilingual export.
+**Subtivio** is engineered specifically to eliminate these points of failure. By decoupling subtitle timestamp structures from translation payloads, Subtivio translates dialogue while locking timecodes to the exact millisecond. It pairs intelligent translation with a real-time synchronized video player, Characters-Per-Second (CPS) readability checking, a full cue timeline editor, and multi-format bilingual export.
 
 ---
 
@@ -85,14 +85,14 @@ Subtitling is one of the most fragile steps in video post-production. Translatin
 ## Core Capabilities
 
 ### ⏱️ Frame-Accurate Millisecond Synchronization
-SubLingo treats subtitle timecodes as immutable anchors.
+Subtivio treats subtitle timecodes as immutable anchors.
 - **Microsecond Precision:** Converts timestamp formats (`HH:MM:SS,mmm` in SRT and `HH:MM:SS.mmm` / `MM:SS.mmm` in WebVTT) into floating-point seconds during parsing and preserves time spans across translation runs.
 - **Tag & Punctuation Preservation:** Retains inline HTML formatting (`<i>`, `<b>`, `<u>`) and subtitle break conventions across translations without corrupting styling.
 - **Zero Hallucination of Cue IDs:** Subtitle blocks are isolated in bounded data structures so that the output count always matches the input count 1:1.
 
 ### 📊 Reading Speed (CPS) Readability Guard
 Subtitles that disappear too quickly ruin the viewing experience.
-- **Dynamic CPS Calculation:** SubLingo analyzes the duration of each cue against its character length using the formula:
+- **Dynamic CPS Calculation:** Subtivio analyzes the duration of each cue against its character length using the formula:
   $$\text{CPS} = \frac{\text{Character Count (stripped of HTML)}}{\text{End Time (s)} - \text{Start Time (s)}}$$
 - **Visual Alert Badges:** Each cue is labeled in real time:
   - `Normal / Optimal` ($\le 17\text{ CPS}$): Comfortable reading pace conforming to global broadcast standards (Netflix / BBC styleguides).
@@ -123,7 +123,7 @@ Generate ready-to-publish subtitle files tailored to your distribution channel:
 
 ## AI Translation Engines
 
-SubLingo supports a multi-provider translation architecture, giving you complete flexibility between free zero-config translation and state-of-the-art LLMs:
+Subtivio supports a multi-provider translation architecture, giving you complete flexibility between free zero-config translation and state-of-the-art LLMs:
 
 | Provider | Model / Engine | Best For | Setup Required |
 | :--- | :--- | :--- | :--- |
@@ -184,8 +184,8 @@ flowchart LR
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/<your-username>/SubLingo.git
-   cd SubLingo
+   git clone https://github.com/<your-username>/Subtivio.git
+   cd Subtivio
    ```
 
 2. **Install project dependencies:**
@@ -197,7 +197,7 @@ flowchart LR
    ```bash
    cp .env.example .env.local
    ```
-   *(SubLingo works immediately with the built-in free engine. API keys are only required if you want to use Google Gemini, OpenAI, or DeepL.)*
+   *(Subtivio works immediately with the built-in free engine. API keys are only required if you want to use Google Gemini, OpenAI, or DeepL.)*
 
 4. **Launch the development server:**
    ```bash
@@ -246,7 +246,7 @@ All API keys are completely optional for local development. Keys can also be add
 
 ## API Reference
 
-SubLingo provides dedicated Next.js Route Handlers for programmatic processing:
+Subtivio provides dedicated Next.js Route Handlers for programmatic processing:
 
 ### 1. Batch Translation
 `POST /api/translate`

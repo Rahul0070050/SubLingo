@@ -39,13 +39,13 @@ export async function getMongoClient(): Promise<MongoClient | null> {
 }
 
 /**
- * Returns the SubLingo MongoDB database instance.
+ * Returns the Subtivio MongoDB database instance.
  */
 export async function getDb(): Promise<Db | null> {
   const client = await getMongoClient();
   if (!client) return null;
 
-  const db = client.db(process.env.MONGODB_DB_NAME || "sublingo");
+  const db = client.db(process.env.MONGODB_DB_NAME || "subtivio");
 
   // Automatically initialize TTL and unique indexes on first connection
   if (!indexesInitialized) {

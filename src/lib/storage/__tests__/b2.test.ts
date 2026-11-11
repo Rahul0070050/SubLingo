@@ -34,7 +34,7 @@ describe("Backblaze B2 Cloud Storage Service", () => {
   it("correctly parses configuration and derives region from B2 endpoint", () => {
     process.env.B2_KEY_ID = "005testkeyid123";
     process.env.B2_APPLICATION_KEY = "K005testappsecret456";
-    process.env.B2_BUCKET_NAME = "sublingo-subtitles";
+    process.env.B2_BUCKET_NAME = "subtivio-subtitles";
     process.env.B2_ENDPOINT = "https://s3.us-east-005.backblazeb2.com";
 
     expect(isB2Configured()).toBe(true);
@@ -42,7 +42,7 @@ describe("Backblaze B2 Cloud Storage Service", () => {
     expect(config).toBeDefined();
     expect(config?.keyId).toBe("005testkeyid123");
     expect(config?.applicationKey).toBe("K005testappsecret456");
-    expect(config?.bucketName).toBe("sublingo-subtitles");
+    expect(config?.bucketName).toBe("subtivio-subtitles");
     expect(config?.region).toBe("us-east-005");
     expect(config?.endpoint).toBe("https://s3.us-east-005.backblazeb2.com");
   });

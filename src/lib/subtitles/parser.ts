@@ -289,7 +289,7 @@ export function parseSubtitleFile(content: string, filename: string): ParseResul
 
     return {
       success: false,
-      error: "Unrecognized subtitle format. SubLingo supports .srt and .vtt files.",
+      error: "Unrecognized subtitle format. Subtivio supports .srt and .vtt files.",
     };
   }
 }

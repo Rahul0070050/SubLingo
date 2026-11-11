@@ -1,6 +1,6 @@
 import { SubtitleFile } from "./types";
 
-const STORAGE_KEY = "sublingo_current_subtitles";
+const STORAGE_KEY = "subtivio_current_subtitles";
 
 /**
  * Save active subtitle file to session storage for seamless cross-workspace transfer

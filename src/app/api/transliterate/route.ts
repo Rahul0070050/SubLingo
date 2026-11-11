@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     // Call Google Input Tools transliteration service
     const googleUrl = `https://inputtools.google.com/request?text=${encodeURIComponent(
       cleanWord
-    )}&itc=${encodeURIComponent(config.itc)}&num=${num}&cp=0&cs=1&ie=utf-8&oe=utf-8&app=sublingo`;
+    )}&itc=${encodeURIComponent(config.itc)}&num=${num}&cp=0&cs=1&ie=utf-8&oe=utf-8&app=subtivio`;
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2500);
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
     const res = await fetch(googleUrl, {
       signal: controller.signal,
       headers: {
-        "User-Agent": "Mozilla/5.0 (SubLingo Subtitle Studio)",
+        "User-Agent": "Mozilla/5.0 (Subtivio Subtitle Studio)",
       },
     });
 

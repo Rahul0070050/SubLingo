@@ -4,7 +4,7 @@ import { getActiveSession } from "@/lib/auth/store";
 export async function GET(request: NextRequest) {
   try {
     // 1. Try cookie
-    let passkey = request.cookies.get("sublingo_passkey")?.value;
+    let passkey = request.cookies.get("subtivio_passkey")?.value;
 
     // 2. Try Authorization header
     if (!passkey) {
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
         expired: true,
         user: null,
       });
-      res.cookies.delete("sublingo_passkey");
+      res.cookies.delete("subtivio_passkey");
       return res;
     }
 

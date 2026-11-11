@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Set secure session cookie valid for 24 hours (86,400 seconds)
-    response.cookies.set("sublingo_passkey", result.passkey, {
+    response.cookies.set("subtivio_passkey", result.passkey, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

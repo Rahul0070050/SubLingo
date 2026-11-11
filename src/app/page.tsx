@@ -40,7 +40,7 @@ export default function LandingPage() {
               className="py-1.5 px-4 text-xs tracking-wider uppercase font-semibold mb-6 shadow-lg shadow-indigo-500/10"
             >
               <Sparkles className="h-3.5 w-3.5 mr-1.5 text-indigo-300" />
-              SubLingo Subtitle Studio • Next.js AI Engine
+              Subtivio Studio • Next.js AI Engine
             </Badge>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
@@ -150,7 +150,7 @@ export default function LandingPage() {
                 Everything You Need for Subtitle Localization
               </h2>
               <p className="text-slate-400 text-sm sm:text-base">
-                SubLingo preserves subtitle integrity where conventional translators fail.
+                Subtivio preserves subtitle integrity where conventional translators fail.
               </p>
             </div>
 
@@ -244,7 +244,7 @@ export default function LandingPage() {
                 Streamlined Pipeline
               </Badge>
               <h2 className="text-3xl font-extrabold text-white">
-                How SubLingo Works
+                How Subtivio Works
               </h2>
             </div>
 
@@ -313,7 +313,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Subtitles className="h-4 w-4 text-indigo-400" />
-            <span className="font-bold text-slate-300">SubLingo Studio</span>
+            <span className="font-bold text-slate-300">Subtivio Studio</span>
             <span>— Next.js Subtitle Localization Studio</span>
           </div>
           <div>Preserving timing & formatting across languages.</div>

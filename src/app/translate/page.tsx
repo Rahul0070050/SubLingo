@@ -61,7 +61,7 @@ export default function TranslateWorkspace() {
   // Load saved settings and existing active subtitle from storage on mount
   React.useEffect(() => {
     try {
-      const saved = localStorage.getItem("sublingo_settings");
+      const saved = localStorage.getItem("subtivio_settings");
       if (saved) {
         const parsed = JSON.parse(saved);
         setSettings((prev) => ({ ...prev, ...parsed }));
@@ -92,7 +92,7 @@ export default function TranslateWorkspace() {
   const handleSaveSettings = (newSettings: TranslationSettings) => {
     setSettings(newSettings);
     try {
-      localStorage.setItem("sublingo_settings", JSON.stringify(newSettings));
+      localStorage.setItem("subtivio_settings", JSON.stringify(newSettings));
     } catch {
       // ignore
     }

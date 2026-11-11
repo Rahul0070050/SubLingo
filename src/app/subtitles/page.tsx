@@ -133,7 +133,7 @@ export default function PublishedSubtitlesPage() {
   const handleCopyLink = async (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     try {
-      const origin = typeof window !== "undefined" ? window.location.origin : "https://sublingo.studio";
+      const origin = typeof window !== "undefined" ? window.location.origin : "https://subtivio.studio";
       await navigator.clipboard.writeText(`${origin}/subtitles/${id}`);
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2000);
@@ -238,7 +238,7 @@ export default function PublishedSubtitlesPage() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider mb-3">
                   <Film className="h-3.5 w-3.5" />
-                  <span>SubLingo Subtitle Releases</span>
+                  <span>Subtivio Subtitle Releases</span>
                 </div>
                 <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
                   Published Subtitle Library

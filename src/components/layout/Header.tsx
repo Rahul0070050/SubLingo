@@ -52,7 +52,7 @@ export function Header({ onOpenSettings, activeProvider = "Free Engine" }: Heade
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-base font-semibold tracking-tight text-white">
-              SubLingo
+              Subtivio
             </span>
             <span className="hidden sm:inline-block text-[11px] font-medium text-slate-400 tracking-wide">
               Studio

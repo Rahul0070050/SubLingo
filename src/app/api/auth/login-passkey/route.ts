@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     );
 
     // Set secure session cookie
-    response.cookies.set("sublingo_passkey", result.user.passkey, {
+    response.cookies.set("subtivio_passkey", result.user.passkey, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

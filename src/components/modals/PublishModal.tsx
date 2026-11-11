@@ -70,7 +70,7 @@ export function PublishModal({
         ? subtitleFile.filename.replace(/\.(srt|vtt)$/i, "")
         : "Untitled Subtitles";
       setReleaseTitle(defaultName);
-      setDescription(`Localized to ${getLanguageName(targetLang)} with SubLingo Studio`);
+      setDescription(`Localized to ${getLanguageName(targetLang)} with Subtivio Studio`);
     }
   }, [isOpen, subtitleFile, targetLang]);
 
@@ -141,7 +141,7 @@ export function PublishModal({
       const id = resData.id;
       setPublishedId(id);
       setB2Stored(Boolean(resData.b2?.stored));
-      const origin = typeof window !== "undefined" ? window.location.origin : "https://sublingo.studio";
+      const origin = typeof window !== "undefined" ? window.location.origin : "https://subtivio.studio";
       setPublishedUrl(`${origin}/subtitles/${id}`);
       setIsPublished(true);
 

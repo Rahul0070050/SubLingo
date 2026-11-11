@@ -120,7 +120,7 @@ export async function POST(
       headers: {
         "Content-Type": mimeType,
         "Content-Disposition": `attachment; filename="${encodeURIComponent(downloadFilename)}"`,
-        "X-SubLingo-Storage": storageSource,
+        "X-Subtivio-Storage": storageSource,
       },
     });
   } catch (error: unknown) {

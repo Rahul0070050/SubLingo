@@ -32,12 +32,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const data = await res.json();
         if (data.authenticated && data.user) {
           setUser(data.user);
-          localStorage.setItem("sublingo_user", JSON.stringify(data.user));
+          localStorage.setItem("subtivio_user", JSON.stringify(data.user));
           return;
         }
       }
       setUser(null);
-      localStorage.removeItem("sublingo_user");
+      localStorage.removeItem("subtivio_user");
     } catch (err) {
       console.warn("Failed to refresh auth session:", err);
     } finally {
@@ -49,13 +49,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   React.useEffect(() => {
     // Fast initial optimistic load from localStorage
     try {
-      const cached = localStorage.getItem("sublingo_user");
+      const cached = localStorage.getItem("subtivio_user");
       if (cached) {
         const parsed = JSON.parse(cached);
         if (parsed && parsed.expiresAt > Date.now()) {
           setUser(parsed);
         } else {
-          localStorage.removeItem("sublingo_user");
+          localStorage.removeItem("subtivio_user");
         }
       }
     } catch {
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (data.success && data.user) {
         setUser(data.user);
-        localStorage.setItem("sublingo_user", JSON.stringify(data.user));
+        localStorage.setItem("subtivio_user", JSON.stringify(data.user));
       }
       return data;
     } catch (err) {
@@ -107,7 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await res.json();
       if (data.success && data.user) {
         setUser(data.user);
-        localStorage.setItem("sublingo_user", JSON.stringify(data.user));
+        localStorage.setItem("subtivio_user", JSON.stringify(data.user));
       }
       return data;
     } catch (err) {
@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.warn("Logout error:", err);
     } finally {
       setUser(null);
-      localStorage.removeItem("sublingo_user");
+      localStorage.removeItem("subtivio_user");
     }
   };
 

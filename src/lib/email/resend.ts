@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resendApiKey = process.env.RESEND_API_KEY;
-const resendFromEmail = process.env.RESEND_FROM_EMAIL || "SubLingo <onboarding@resend.dev>";
+const resendFromEmail = process.env.RESEND_FROM_EMAIL || "Subtivio <onboarding@resend.dev>";
 
 // Lazy initialization
 let resendClient: Resend | null = null;
@@ -41,14 +41,14 @@ export async function sendOtpEmail({
     const { data, error } = await resendClient.emails.send({
       from: resendFromEmail,
       to: [to],
-      subject: `Your SubLingo Verification Code: ${otp}`,
+      subject: `Your Subtivio Verification Code: ${otp}`,
       html: `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SubLingo Verification Code</title>
+  <title>Subtivio Verification Code</title>
   <style>
     body {
       margin: 0;
@@ -146,7 +146,7 @@ export async function sendOtpEmail({
     <div class="header">
       <div class="badge">Passwordless Verification</div>
       <h1 class="title">Verify Your Gmail</h1>
-      <p class="subtitle">Enter the verification code below to generate your 24-hour master passkey for SubLingo Studio.</p>
+      <p class="subtitle">Enter the verification code below to generate your 24-hour master passkey for Subtivio Studio.</p>
     </div>
 
     <div class="code-box">
@@ -161,7 +161,7 @@ export async function sendOtpEmail({
 
     <div class="footer">
       If you did not request this code, you can safely ignore this email.<br>
-      © ${new Date().getFullYear()} SubLingo Subtitle Studio. All rights reserved.
+      © ${new Date().getFullYear()} Subtivio Subtitle Studio. All rights reserved.
     </div>
   </div>
 </body>
