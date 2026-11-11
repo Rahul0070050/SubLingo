@@ -191,7 +191,7 @@ export function TransliteratedTextarea({
       // If we already have candidates or word info, replace it
       if (chosen && chosen !== activeWordInfo.word) {
         e.preventDefault();
-        const trailing = e.key === "Enter" ? "\n" : e.key;
+        const trailing = e.key === "Enter" ? "" : e.key;
         applyCandidate(chosen, trailing);
         return;
       }

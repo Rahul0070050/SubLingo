@@ -175,7 +175,7 @@ export function SettingsModal({ isOpen, onClose, settings, onSave }: SettingsMod
               <div className="flex items-center gap-2 text-[11px] text-slate-400">
                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
                 <span>
-                  Your API key is kept securely in your browser session or sent over secure server handlers.
+                  Your API key is kept securely in your browser.
                 </span>
               </div>
 
