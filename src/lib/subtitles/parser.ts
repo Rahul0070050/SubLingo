@@ -293,3 +293,39 @@ export function parseSubtitleFile(content: string, filename: string): ParseResul
     };
   }
 }
+
+/**
+ * Shift all subtitle cues by a given millisecond offset.
+ * Positive offset delays cues (plays later); negative offset advances cues (plays earlier).
+ * Start time is clamped to 0s, and end time is guaranteed to be >= start + 0.1s.
+ */
+export function shiftCueTimings(
+  cues: SubtitleCue[],
+  offsetMs: number,
+  defaultFormat: SubtitleFormat = "srt"
+): SubtitleCue[] {
+  if (!offsetMs || cues.length === 0) return cues;
+  const offsetSeconds = offsetMs / 1000;
+
+  return cues.map((cue) => {
+    const isVtt = cue.startTime.includes(".") || cue.endTime.includes(".");
+    const format: SubtitleFormat = isVtt ? "vtt" : defaultFormat;
+
+    const rawStart = cue.startSeconds + offsetSeconds;
+    const rawEnd = cue.endSeconds + offsetSeconds;
+
+    const newStart = Math.max(0, Math.round(rawStart * 1000) / 1000);
+    const newEnd = Math.max(newStart + 0.1, Math.round(rawEnd * 1000) / 1000);
+    const duration = Math.max(0.1, newEnd - newStart);
+
+    return {
+      ...cue,
+      startSeconds: newStart,
+      endSeconds: newEnd,
+      startTime: secondsToTimestamp(newStart, format),
+      endTime: secondsToTimestamp(newEnd, format),
+      readingSpeedCps: calculateCPS(cue.translatedText || cue.originalText, duration),
+    };
+  });
+}
+

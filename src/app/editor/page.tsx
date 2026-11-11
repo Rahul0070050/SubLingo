@@ -16,9 +16,11 @@ import {
   secondsToTimestamp,
   calculateCPS,
   parseSubtitleFile,
+  shiftCueTimings,
 } from "@/lib/subtitles/parser";
 import { saveActiveSubtitle, loadActiveSubtitle } from "@/lib/subtitles/storage";
 import { TransliteratedTextarea } from "@/components/studio/TransliteratedTextarea";
+import { QuickTimeShift } from "@/components/studio/QuickTimeShift";
 import { SUPPORTED_LANGUAGES } from "@/lib/translation/languages";
 import { TRANSLITERATION_MAP } from "@/lib/transliteration/languages";
 import {
@@ -310,27 +312,19 @@ export default function SubtitleEditorPage() {
   // Global Time Shift
   const handleApplyGlobalShift = () => {
     if (globalShiftMs === 0) return;
-    const shiftSeconds = globalShiftMs / 1000;
     const format = subtitleFile?.format || "srt";
-
-    const shifted = cues.map((cue) => {
-      const newStart = Math.max(0, cue.startSeconds + shiftSeconds);
-      const newEnd = Math.max(newStart + 0.1, cue.endSeconds + shiftSeconds);
-      const duration = Math.max(0.1, newEnd - newStart);
-
-      return {
-        ...cue,
-        startSeconds: newStart,
-        endSeconds: newEnd,
-        startTime: secondsToTimestamp(newStart, format),
-        endTime: secondsToTimestamp(newEnd, format),
-        readingSpeedCps: calculateCPS(cue.originalText, duration),
-      };
-    });
-
+    const shifted = shiftCueTimings(cues, globalShiftMs, format);
     setCues(shifted);
     setShowTimeShiftModal(false);
     setGlobalShiftMs(0);
+  };
+
+  // Quick Shift (+/- 50ms)
+  const handleQuickShift = (offsetMs: number) => {
+    if (!offsetMs || cues.length === 0) return;
+    const format = subtitleFile?.format || "srt";
+    const shifted = shiftCueTimings(cues, offsetMs, format);
+    setCues(shifted);
   };
 
   // Search & Replace All
@@ -488,6 +482,9 @@ export default function SubtitleEditorPage() {
                   <Clock className="h-3.5 w-3.5 text-slate-400" />
                   <span>Time Shift</span>
                 </Button>
+
+                {/* Quick Time Shift (+/- 50ms) */}
+                <QuickTimeShift onShift={handleQuickShift} disabled={cues.length === 0} />
 
                 {/* Find & Replace Toggle */}
                 <Button

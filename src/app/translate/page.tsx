@@ -15,6 +15,7 @@ import { SubtitleFile, SubtitleCue, TranslationSettings } from "@/lib/subtitles/
 import { SUPPORTED_LANGUAGES } from "@/lib/translation/languages";
 import { TRANSLITERATION_MAP } from "@/lib/transliteration/languages";
 import { saveActiveSubtitle, loadActiveSubtitle } from "@/lib/subtitles/storage";
+import { shiftCueTimings } from "@/lib/subtitles/parser";
 import {
   ArrowRight,
   Download,
@@ -245,6 +246,14 @@ export default function TranslateWorkspace() {
     if (activeCueId === id) {
       setActiveCueId(updated[0]?.id);
     }
+  };
+
+  // Quick Shift timing for all cues (+/- 50ms)
+  const handleTimeShift = (offsetMs: number) => {
+    if (!offsetMs || cues.length === 0) return;
+    const format = subtitleFile?.format || "srt";
+    const shifted = shiftCueTimings(cues, offsetMs, format);
+    setCues(shifted);
   };
 
   const completedCount = cues.filter((c) => c.translatedText && c.status === "completed").length;
@@ -478,6 +487,7 @@ export default function TranslateWorkspace() {
                   onRetranslateCue={handleRetranslateSingleCue}
                   onSeekToCue={handleSeekToCue}
                   onDeleteCue={handleDeleteCue}
+                  onTimeShift={handleTimeShift}
                   targetLang={settings.targetLang}
                   sourceLang={settings.sourceLang}
                 />

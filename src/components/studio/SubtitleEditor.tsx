@@ -20,6 +20,7 @@ import {
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { TransliteratedTextarea } from "@/components/studio/TransliteratedTextarea";
+import { QuickTimeShift } from "@/components/studio/QuickTimeShift";
 import { getTransliterationConfig } from "@/lib/transliteration/languages";
 
 interface SubtitleEditorProps {
@@ -29,6 +30,7 @@ interface SubtitleEditorProps {
   onRetranslateCue?: (cueId: number) => void;
   onSeekToCue?: (startSeconds: number, cueId: number) => void;
   onDeleteCue?: (cueId: number) => void;
+  onTimeShift?: (offsetMs: number) => void;
   targetLang?: string;
   sourceLang?: string;
 }
@@ -40,6 +42,7 @@ export function SubtitleEditor({
   onRetranslateCue,
   onSeekToCue,
   onDeleteCue,
+  onTimeShift,
   targetLang = "ml",
   sourceLang,
 }: SubtitleEditorProps) {
@@ -120,8 +123,9 @@ export function SubtitleEditor({
           />
         </div>
 
-        {/* Filter Pills */}
+        {/* Filter Pills & Quick Shift */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
+          <QuickTimeShift onShift={onTimeShift} disabled={cues.length === 0 || !onTimeShift} />
           <button
             onClick={() => setFilterMode("all")}
             className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${filterMode === "all"
@@ -209,6 +213,7 @@ export function SubtitleEditor({
                     </span>
                   </div>
 
+                  {/* add here editing the subtitle(cue) style */}
                   <div className="flex items-center gap-1">
                     {/* Reading speed */}
                     {getCpsBadge(currentCps)}

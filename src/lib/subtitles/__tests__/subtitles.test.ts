@@ -5,6 +5,7 @@ import {
   timestampToSeconds,
   secondsToTimestamp,
   calculateCPS,
+  shiftCueTimings,
 } from "../parser";
 import { serializeSRT, serializeVTT } from "../serializer";
 import { SubtitleCue } from "../types";
@@ -109,3 +110,71 @@ describe("Subtitle Serializer", () => {
     expect(srt).toContain("00:00:02,500 --> 00:00:05,500");
   });
 });
+
+describe("shiftCueTimings", () => {
+  const cues: SubtitleCue[] = [
+    {
+      id: 1,
+      startTime: "00:00:01,000",
+      endTime: "00:00:04,000",
+      startSeconds: 1.0,
+      endSeconds: 4.0,
+      originalText: "Line 1",
+      translatedText: "Línea 1",
+    },
+    {
+      id: 2,
+      startTime: "00:00:05.500",
+      endTime: "00:00:08.000",
+      startSeconds: 5.5,
+      endSeconds: 8.0,
+      originalText: "Line 2 (VTT)",
+      translatedText: "Línea 2",
+    },
+  ];
+
+  it("shifts cues forward by +50ms", () => {
+    const shifted = shiftCueTimings(cues, 50);
+    expect(shifted[0].startSeconds).toBeCloseTo(1.05, 3);
+    expect(shifted[0].endSeconds).toBeCloseTo(4.05, 3);
+    expect(shifted[0].startTime).toBe("00:00:01,050");
+    expect(shifted[0].endTime).toBe("00:00:04,050");
+
+    // VTT cue preserves dot delimiter
+    expect(shifted[1].startSeconds).toBeCloseTo(5.55, 3);
+    expect(shifted[1].startTime).toBe("00:00:05.550");
+  });
+
+  it("shifts cues backward by -50ms", () => {
+    const shifted = shiftCueTimings(cues, -50);
+    expect(shifted[0].startSeconds).toBeCloseTo(0.95, 3);
+    expect(shifted[0].endSeconds).toBeCloseTo(3.95, 3);
+    expect(shifted[0].startTime).toBe("00:00:00,950");
+    expect(shifted[0].endTime).toBe("00:00:03,950");
+  });
+
+  it("clamps start time to 0 and ensures minimum cue duration", () => {
+    const nearZeroCue: SubtitleCue[] = [
+      {
+        id: 1,
+        startTime: "00:00:00,020",
+        endTime: "00:00:00,080",
+        startSeconds: 0.02,
+        endSeconds: 0.08,
+        originalText: "Brief flash",
+        translatedText: "",
+      },
+    ];
+
+    const shifted = shiftCueTimings(nearZeroCue, -50);
+    expect(shifted[0].startSeconds).toBe(0);
+    expect(shifted[0].startTime).toBe("00:00:00,000");
+    expect(shifted[0].endSeconds).toBeGreaterThanOrEqual(0.1);
+  });
+
+  it("returns original array when offset is 0", () => {
+    const shifted = shiftCueTimings(cues, 0);
+    expect(shifted).toBe(cues);
+  });
+});
+
