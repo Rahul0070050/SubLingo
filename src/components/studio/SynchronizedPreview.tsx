@@ -247,7 +247,7 @@ export function SynchronizedPreview({
       if (isPlaying) {
         videoRef.current.pause();
       } else {
-        videoRef.current.play().catch((err) => console.log("Play error:", err));
+        videoRef.current.play().catch(() => {});
       }
     }
     setIsPlaying(!isPlaying);
@@ -352,9 +352,9 @@ export function SynchronizedPreview({
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
     if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().catch((err) => console.log(err));
+      containerRef.current.requestFullscreen().catch(() => {});
     } else {
-      document.exitFullscreen().catch((err) => console.log(err));
+      document.exitFullscreen().catch(() => {});
     }
   };
 

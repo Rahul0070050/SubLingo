@@ -40,7 +40,7 @@ export default function LandingPage() {
               className="py-1.5 px-4 text-xs tracking-wider uppercase font-semibold mb-6 shadow-lg shadow-indigo-500/10"
             >
               <Sparkles className="h-3.5 w-3.5 mr-1.5 text-indigo-300" />
-              Subtivio Studio • Next.js AI Engine
+              AI Subtitle Studio • Frame-Accurate Pacing
             </Badge>
 
             <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
@@ -309,14 +309,110 @@ export default function LandingPage() {
       </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-white/10 bg-slate-950 py-8 text-xs text-slate-500">
-        <div className="container mx-auto px-4 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Subtitles className="h-4 w-4 text-indigo-400" />
-            <span className="font-bold text-slate-300">Subtivio Studio</span>
-            <span>— Next.js Subtitle Localization Studio</span>
+      <footer className="border-t border-white/10 bg-[#090b0e] pt-14 pb-8 text-xs text-slate-400">
+        <div className="container mx-auto px-4 sm:px-8 max-w-6xl space-y-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Col 1: Brand & Mission */}
+            <div className="space-y-3.5 md:col-span-1">
+              <div className="flex items-center gap-2.5">
+                <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600/90 text-white shadow-sm border border-blue-400/20">
+                  <Subtitles className="h-3.5 w-3.5" />
+                </div>
+                <span className="text-base font-semibold tracking-tight text-white">
+                  Subtivio <span className="text-slate-400 font-normal text-xs">Studio</span>
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Professional frame-accurate subtitle translation and timing synchronization for global creators and localization teams.
+              </p>
+              <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 text-[10px] font-medium">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>All Systems Operational</span>
+              </div>
+            </div>
+
+            {/* Col 2: Studio Workspaces */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
+                Workspaces
+              </h4>
+              <ul className="space-y-2 text-xs">
+                <li>
+                  <Link href="/translate" className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5">
+                    <Globe className="h-3 w-3 text-blue-400" />
+                    <span>Translate Workspace</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/editor" className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5">
+                    <Layers className="h-3 w-3 text-indigo-400" />
+                    <span>Cue Timeline Editor</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/subtitles" className="text-slate-400 hover:text-white transition-colors flex items-center gap-1.5">
+                    <Film className="h-3 w-3 text-purple-400" />
+                    <span>Subtitle Library</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 3: Core Capabilities */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
+                Capabilities
+              </h4>
+              <ul className="space-y-2 text-xs text-slate-400">
+                <li className="flex items-center gap-1.5">
+                  <Clock className="h-3 w-3 text-cyan-400" />
+                  <span>Frame-Accurate Millisecond Sync</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <Zap className="h-3 w-3 text-amber-400" />
+                  <span>Reading Speed (CPS) Protection</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <Download className="h-3 w-3 text-emerald-400" />
+                  <span>Bilingual Stacked & Inline Export</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <ShieldCheck className="h-3 w-3 text-blue-400" />
+                  <span>100% Client-Side Video Privacy</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Col 4: Supported Formats & Engines */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-semibold text-white uppercase tracking-wider">
+                Standards & Engines
+              </h4>
+              <div className="flex flex-wrap gap-1.5">
+                <Badge variant="outline" className="text-[10px] text-slate-300 border-white/10">.SRT (SubRip)</Badge>
+                <Badge variant="outline" className="text-[10px] text-slate-300 border-white/10">.VTT (WebVTT)</Badge>
+                <Badge variant="outline" className="text-[10px] text-slate-300 border-white/10">Gemini AI</Badge>
+                <Badge variant="outline" className="text-[10px] text-slate-300 border-white/10">OpenAI GPT-4o</Badge>
+                <Badge variant="outline" className="text-[10px] text-slate-300 border-white/10">DeepL</Badge>
+                <Badge variant="outline" className="text-[10px] text-slate-300 border-white/10">Free Engine</Badge>
+              </div>
+              <p className="text-[11px] text-slate-500 leading-normal">
+                Formatted dialogue tags (&lt;i&gt;, &lt;b&gt;, &lt;u&gt;) and cue positioning headers are preserved natively.
+              </p>
+            </div>
           </div>
-          <div>Preserving timing & formatting across languages.</div>
+
+          {/* Bottom Copyright Row */}
+          <div className="pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-3 text-slate-500 text-[11px]">
+            <div>
+              © {new Date().getFullYear()} Subtivio Studio. All rights reserved.
+            </div>
+            <div className="flex items-center gap-4">
+              <span>Zero Timing Drift Guarantee</span>
+              <span>•</span>
+              <span>50+ Languages Supported</span>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

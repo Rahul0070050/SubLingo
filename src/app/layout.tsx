@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
 
 export const metadata: Metadata = {
   title: "Subtivio — Subtitle Translation Studio",
@@ -36,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
+    <html lang="en" className="dark h-full antialiased">
       <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 font-sans">
         <AuthProvider>
           {children}

@@ -71,7 +71,6 @@ export default function TranslateWorkspace() {
     }
 
     const existingSubtitle = loadActiveSubtitle();
-    console.log("existingSubtitle", existingSubtitle);
     if (existingSubtitle && existingSubtitle.cues && existingSubtitle.cues.length > 0) {
       setSubtitleFile(existingSubtitle);
       setCues(existingSubtitle.cues);
