@@ -28,6 +28,7 @@ export const viewport = {
 };
 
 import { AuthProvider } from "@/lib/auth/AuthContext";
+import { ToastContainer } from "@/components/ui/Toast";
 
 export default function RootLayout({
   children,
@@ -37,7 +38,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 font-sans">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {children}
+          <ToastContainer />
+        </AuthProvider>
       </body>
     </html>
   );

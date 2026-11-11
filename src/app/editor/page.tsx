@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent } from "@/components/ui/Card";
+import { toast } from "@/components/ui/Toast";
 import { SubtitleFile, SubtitleCue } from "@/lib/subtitles/types";
 import {
   timestampToSeconds,
@@ -232,7 +233,7 @@ export default function SubtitleEditorPage() {
   // Delete cue
   const handleDeleteCue = (id: number) => {
     if (cues.length <= 1) {
-      alert("At least one subtitle cue must remain.");
+      toast.warning("At least one subtitle cue must remain.", "Subtitle Notice");
       return;
     }
     const updated = cues.filter((c) => c.id !== id).map((c, i) => ({ ...c, id: i + 1 }));
@@ -349,7 +350,7 @@ export default function SubtitleEditorPage() {
     });
 
     setCues(updated);
-    alert(`Replaced ${count} occurrence(s) across subtitles.`);
+    toast.success(`Replaced ${count} occurrence(s) across subtitles.`, "Search & Replace");
   };
 
   // Transfer to Translate Workspace

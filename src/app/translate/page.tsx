@@ -11,6 +11,7 @@ import { ExportModal } from "@/components/modals/ExportModal";
 import { PublishModal } from "@/components/modals/PublishModal";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
+import { toast } from "@/components/ui/Toast";
 import { SubtitleFile, SubtitleCue, TranslationSettings } from "@/lib/subtitles/types";
 import { SUPPORTED_LANGUAGES } from "@/lib/translation/languages";
 import { TRANSLITERATION_MAP } from "@/lib/transliteration/languages";
@@ -197,7 +198,7 @@ export default function TranslateWorkspace() {
     } catch (err: unknown) {
       if ((err as Error).name !== "AbortError") {
         console.error("Batch translation error:", err);
-        alert(`Translation notice: ${(err as Error).message}`);
+        toast.error((err as Error).message, "Translation Notice");
       }
     } finally {
       setIsTranslating(false);
@@ -247,7 +248,7 @@ export default function TranslateWorkspace() {
   // Delete cue
   const handleDeleteCue = (id: number) => {
     if (cues.length <= 1) {
-      alert("At least one subtitle cue must remain.");
+      toast.warning("At least one subtitle cue must remain.", "Subtitle Notice");
       return;
     }
     const updated = cues.filter((c) => c.id !== id).map((c, i) => ({ ...c, id: i + 1 }));
