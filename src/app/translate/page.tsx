@@ -104,9 +104,18 @@ export default function TranslateWorkspace() {
     setTranslationProgress(0);
   };
 
-  const handleUpdateCue = (cueId: number, translatedText: string) => {
+  const handleUpdateCue = (cueId: number, translatedText: string, cueSettings?: string) => {
     setCues((prev) =>
-      prev.map((c) => (c.id === cueId ? { ...c, translatedText, status: "completed" } : c))
+      prev.map((c) =>
+        c.id === cueId
+          ? {
+              ...c,
+              translatedText,
+              settings: cueSettings !== undefined ? cueSettings : c.settings,
+              status: "completed",
+            }
+          : c
+      )
     );
   };
 

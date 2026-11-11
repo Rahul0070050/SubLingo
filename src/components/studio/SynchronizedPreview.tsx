@@ -29,6 +29,15 @@ interface SynchronizedPreviewProps {
   seekTimeSeconds?: number;
 }
 
+function renderSubtitleHtml(text: string) {
+  if (!text) return null;
+  const sanitized = text
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
+    .replace(/on\w+="[^"]*"/g, "")
+    .replace(/\n/g, "<br/>");
+  return <span dangerouslySetInnerHTML={{ __html: sanitized }} />;
+}
+
 export function SynchronizedPreview({
   cues,
   currentCueId,
@@ -549,38 +558,49 @@ export function SynchronizedPreview({
         )}
 
         {/* Live Cinema Subtitle Overlay (Netflix/Theater grade) */}
-        {activeCue && (
-          <div
-            className={`absolute ${subtitlePosition === "top" ? "top-6" : "bottom-6"
-              } left-4 right-4 z-20 flex flex-col items-center justify-center text-center pointer-events-none transition-all duration-150 animate-in fade-in zoom-in-95`}
-          >
+        {activeCue && (() => {
+          const isCueTop = activeCue.settings?.includes("line:0%") || subtitlePosition === "top";
+          const isCueMiddle = activeCue.settings?.includes("line:50%");
+          const cueAlign = activeCue.settings?.includes("align:left")
+            ? "text-left items-start"
+            : activeCue.settings?.includes("align:right")
+            ? "text-right items-end"
+            : "text-center items-center";
+
+          return (
             <div
-              className={`max-w-3xl rounded-xl bg-black/85 backdrop-blur-md border border-white/20 shadow-2xl text-shadow ${subtitleSizeClasses[subtitleSize]}`}
-              style={{
-                textShadow: "0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9)",
-              }}
+              className={`absolute ${
+                isCueTop ? "top-6" : isCueMiddle ? "top-1/2 -translate-y-1/2" : "bottom-6"
+              } left-4 right-4 z-20 flex flex-col justify-center ${cueAlign} pointer-events-none transition-all duration-150 animate-in fade-in zoom-in-95`}
             >
-              {previewMode === "bilingual" ? (
-                <div className="space-y-1">
+              <div
+                className={`max-w-3xl rounded-xl bg-black/85 backdrop-blur-md border border-white/20 shadow-2xl text-shadow [&_b]:font-bold [&_i]:italic [&_u]:underline ${subtitleSizeClasses[subtitleSize]}`}
+                style={{
+                  textShadow: "0 2px 4px rgba(0,0,0,0.9), 0 0 2px rgba(0,0,0,0.9)",
+                }}
+              >
+                {previewMode === "bilingual" ? (
+                  <div className="space-y-1">
+                    <p className="text-amber-300 font-semibold tracking-wide drop-shadow-md">
+                      {renderSubtitleHtml(activeCue.translatedText || activeCue.originalText)}
+                    </p>
+                    <p className="text-white/90 font-medium text-xs sm:text-sm drop-shadow">
+                      {renderSubtitleHtml(activeCue.originalText)}
+                    </p>
+                  </div>
+                ) : previewMode === "translated" ? (
                   <p className="text-amber-300 font-semibold tracking-wide drop-shadow-md">
-                    {activeCue.translatedText || activeCue.originalText}
+                    {renderSubtitleHtml(activeCue.translatedText || activeCue.originalText)}
                   </p>
-                  <p className="text-white/90 font-medium text-xs sm:text-sm drop-shadow">
-                    {activeCue.originalText}
+                ) : (
+                  <p className="text-white font-medium tracking-wide drop-shadow-md">
+                    {renderSubtitleHtml(activeCue.originalText)}
                   </p>
-                </div>
-              ) : previewMode === "translated" ? (
-                <p className="text-amber-300 font-semibold tracking-wide drop-shadow-md">
-                  {activeCue.translatedText || activeCue.originalText}
-                </p>
-              ) : (
-                <p className="text-white font-medium tracking-wide drop-shadow-md">
-                  {activeCue.originalText}
-                </p>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
 
       {/* Media Timeline & Controls */}

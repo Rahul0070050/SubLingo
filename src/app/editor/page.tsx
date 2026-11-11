@@ -21,6 +21,7 @@ import {
 import { saveActiveSubtitle, loadActiveSubtitle } from "@/lib/subtitles/storage";
 import { TransliteratedTextarea } from "@/components/studio/TransliteratedTextarea";
 import { QuickTimeShift } from "@/components/studio/QuickTimeShift";
+import { CueStyleToolbar } from "@/components/studio/CueStyleToolbar";
 import { SUPPORTED_LANGUAGES } from "@/lib/translation/languages";
 import { TRANSLITERATION_MAP } from "@/lib/transliteration/languages";
 import {
@@ -720,8 +721,28 @@ export default function SubtitleEditorPage() {
                             </span>
                           </div>
 
-                          {/* Cue Toolbar Actions (Split, Merge, Add After, Delete) */}
+                          {/* Cue Toolbar Actions (Style, Split, Merge, Add After, Delete) */}
                           <div className="flex items-center gap-1">
+                            <CueStyleToolbar
+                              text={cue.originalText}
+                              settings={cue.settings}
+                              onUpdate={(newText, newSettings) => {
+                                setCues((prev) =>
+                                  prev.map((c) =>
+                                    c.id === cue.id
+                                      ? {
+                                          ...c,
+                                          originalText: newText,
+                                          settings: newSettings !== undefined ? newSettings : c.settings,
+                                          charCount: newText.length,
+                                        }
+                                      : c
+                                  )
+                                );
+                              }}
+                            />
+                            <div className="h-3.5 w-px bg-white/[0.08] mx-0.5" />
+
                             <button
                               type="button"
                               onClick={() => handleSplitCue(cue.id)}

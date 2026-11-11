@@ -21,12 +21,13 @@ import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { TransliteratedTextarea } from "@/components/studio/TransliteratedTextarea";
 import { QuickTimeShift } from "@/components/studio/QuickTimeShift";
+import { CueStyleToolbar } from "@/components/studio/CueStyleToolbar";
 import { getTransliterationConfig } from "@/lib/transliteration/languages";
 
 interface SubtitleEditorProps {
   cues: SubtitleCue[];
   activeCueId?: number;
-  onUpdateCue: (cueId: number, translatedText: string) => void;
+  onUpdateCue: (cueId: number, translatedText: string, settings?: string) => void;
   onRetranslateCue?: (cueId: number) => void;
   onSeekToCue?: (startSeconds: number, cueId: number) => void;
   onDeleteCue?: (cueId: number) => void;
@@ -213,8 +214,19 @@ export function SubtitleEditor({
                     </span>
                   </div>
 
-                  {/* add here editing the subtitle(cue) style */}
-                  <div className="flex items-center gap-1">
+                  {/* Cue Styling & Actions */}
+                  <div className="flex items-center gap-1.5">
+                    {/* Cue Style Toolbar (Bold, Italic, Underline, Color, Position) */}
+                    <CueStyleToolbar
+                      text={cue.translatedText || cue.originalText}
+                      settings={cue.settings}
+                      onUpdate={(newText, newSettings) =>
+                        onUpdateCue(cue.id, newText, newSettings)
+                      }
+                    />
+
+                    <div className="h-3.5 w-px bg-white/[0.08]" />
+
                     {/* Reading speed */}
                     {getCpsBadge(currentCps)}
 
